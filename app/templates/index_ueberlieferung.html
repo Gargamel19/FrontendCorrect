@@ -1,0 +1,12 @@
+<html>
+    <head>
+        <title>{{ title }} - Microblog</title>
+    </head>
+    <body>
+        {% for file in files %}
+        <h2>
+            <a href="{{ url + '&text=' + file }}">{{ file }}</a>
+        </h2>
+        {% endfor %}
+    </body>
+</html>

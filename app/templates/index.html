@@ -1,0 +1,10 @@
+<html>
+    <head>
+        <title>{{ title }} - Microblog</title>
+    </head>
+    <body>
+        {% for file in files %}
+        <h1><div><a href="{{ url + '?ueberlieferung=' + file }}">{{ file }}</a></div></h1>
+        {% endfor %}
+    </body>
+</html>

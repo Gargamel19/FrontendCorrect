@@ -1,0 +1,19 @@
+<html>
+    <head>
+        <title>{{ title }} - Microblog</title>
+    </head>
+    <body>
+        {% for file in files %}
+        <div>
+            <h1>
+                {{ file[0] }}
+            </h1>
+            {% for texts in file[1] %}
+            <p>
+                {{ texts }}
+            </p>
+            {% endfor %}
+        </div>
+        {% endfor %}
+    </body>
+</html>
