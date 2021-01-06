@@ -1,1 +1,1 @@
-### `flusk run`
+### `flask run`
