@@ -18,11 +18,13 @@ def ueberlieferung():
         if 'text' in request.args:
             text = request.args["text"]
             response = requests.get(beckend_endpoint + "/files?ueberlieferung=" + ueberlieferung + "&text=" + text)
-            files_temp = json.loads(response.text)
-            files = []
-            for file in files_temp:
-                files.append([file, files_temp[file]])
-            return render_template('index_ueberlieferung_text.html', title='Home', files=files, url=request.url)
+            files = json.loads(response.text)
+            return_list = []
+            for form in files:
+                return_list.append([form[0], form[1].split(" ")])
+
+
+            return render_template('index_ueberlieferung_text.html', title='Home', files=return_list, url=request.url, len=len(return_list))
         else:
             response = requests.get(beckend_endpoint + "/files?ueberlieferung=" + ueberlieferung)
             files = json.loads(response.text)

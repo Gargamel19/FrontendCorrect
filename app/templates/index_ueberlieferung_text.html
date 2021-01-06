@@ -1,19 +1,24 @@
 <html>
     <head>
+        <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/textpage.css') }}">
         <title>{{ title }} - Microblog</title>
     </head>
     <body>
-        {% for file in files %}
         <div>
-            <h1>
-                {{ file[0] }}
-            </h1>
-            {% for texts in file[1] %}
-            <p>
-                {{ texts }}
-            </p>
-            {% endfor %}
-        </div>
+        {% for i in range(len) %}
+            <div style="float: left" class="sepaerator">
+                <div style="padding: 7px; float: left; color: red;">
+                    |{{ files[i][0] }}|
+                </div>
+            </div>
+            <div style="float: left;">
+                {% for word in files[i][1] %}
+                <div class="{{ i }}" style="float: left; padding: 7px;">
+                    {{ word }}
+                </div>
+                {% endfor %}
+            </div>
         {% endfor %}
+        </div>
     </body>
 </html>
