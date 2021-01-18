@@ -23,7 +23,6 @@ def ueberlieferung():
             for form in files:
                 return_list.append([form[0], form[1].split(" ")])
 
-
             return render_template('index_ueberlieferung_text.html', title='Home', files=return_list, url=request.url, len=len(return_list))
         else:
             response = requests.get(beckend_endpoint + "/files?ueberlieferung=" + ueberlieferung)
