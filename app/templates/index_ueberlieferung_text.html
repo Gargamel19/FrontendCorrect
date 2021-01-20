@@ -8,12 +8,14 @@
         <div>
         {% for i in range(len) %}
             <div style="float: left" class="sepaerator">
-                <button class="sepaerator_text" onclick="myFunction(this)" style="padding: 5px; float: left;">
-                    {{ files[i][0] }}
-                </button>
+                <form method="post">
+                    <button class="sepaerator_text" onclick="myFunction(this)" style="padding: 5px; float: left;", name="{{ i }}">
+                        {{ files[i][1][0] }}
+                    </button>
+                </form>
             </div>
             <div style="float: left;">
-                {% for word in files[i][1] %}
+                {% for word in files[i][0] %}
                 <div class="wordContainer {{ i }}" style="float: left; padding: 7px;" onload="set_color(this, {{ i }})">
                     {{ word }}
                 </div>

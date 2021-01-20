@@ -1,5 +1,5 @@
 import json
-from flask import render_template
+from flask import render_template, request
 from app import app
 from flask import request
 import requests
@@ -9,10 +9,15 @@ config = configparser.ConfigParser()
 config.read('E:\git\CorrectFrontend\.config')
 beckend_endpoint = config['BACKEND']['ip'] + ":" + config['BACKEND']['port']
 
+selected = ""
 
-
-@app.route('/')
+@app.route('/', methods=['POST', 'GET'])
 def ueberlieferung():
+
+    if request.method == 'POST':
+        for element in request.form:
+            selected = element
+
     if 'ueberlieferung' in request.args:
         ueberlieferung = request.args["ueberlieferung"]
         if 'text' in request.args:
