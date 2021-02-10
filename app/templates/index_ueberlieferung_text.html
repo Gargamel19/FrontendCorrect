@@ -1,27 +1,60 @@
 <html>
-    <script type="text/javascript" src="{{ url_for('static', filename = 'scripts/input_handler.js') }}"></script>
     <head>
         <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/textpage.css') }}">
         <title>{{ title }} - Microblog</title>
+        <script>
+            document.addEventListener("dragstart", dragstart_handler);
+            function dragstart_handler(ev) {
+                // Add different types of drag data
+                ev.dataTransfer.setData("text", ev.target.id);
+                console.log(ev.target.id)
+                var dropzones = document.getElementsByClassName("dropzone")
+                for (i = 0; i < dropzones.length; i++){
+                    dropzones[i].style.borderColor = "gray"
+                }
+            }
+            function drop_handler(ev) {
+                ev.preventDefault();
+                if(ev.target.className === "dropzone"){
+                    var data = ev.dataTransfer.getData('text');
+                ev.target.appendChild(document.getElementById(data));
+                }
+                var dropzones = document.getElementsByClassName("dropzone")
+                for (i = 0; i < dropzones.length; i++){
+                    dropzones[i].style.borderColor = "transparent"
+                }
+            }
+            function dragover_handler(ev) {
+                ev.preventDefault();
+                ev.dataTransfer.dropEffect = "move";
+            }
+
+        </script>
     </head>
     <body>
         <div>
-        {% for i in range(len) %}
-            <div style="float: left" class="sepaerator">
-                <form method="post">
-                    <button class="sepaerator_text" onclick="myFunction(this)" style="padding: 5px; float: left;", name="{{ i }}">
-                        {{ files[i][1][0] }}
-                    </button>
-                </form>
-            </div>
-            <div style="float: left;">
-                {% for word in files[i][0] %}
-                <div class="wordContainer {{ i }}" style="float: left; padding: 7px;" onload="set_color(this, {{ i }})">
-                    {{ word }}
-                </div>
+            <form method="post">
+                <div class="text" style="float: left">
+                {% for i in range(len) %}
+
+                    {% for j in range(files[i][0]|length) %}
+
+                    <div class="dropzone" ondrop="drop_handler(event)" ondragover="dragover_handler(event)" style=" border-style: dotted; border-color: transparent; height: 30px; display:inline-block; min-width: 5px; float: left;">
+                        {% if j == 0 %}
+                            <input ondrop="return false" height="30px" width="fit-content" name="cat_{{ i }}" style="float: left; height: 30px; background-color: transparent; border-color: red; width: {{ (files[i][1]|length + 1) * 8 }}px; " id="{{i}}" draggable="true" value="{{ files[i][1] }}">
+                        {% endif %}
+                    </div>
+                    <input ondrop="return false" height="30px" width="fit-content" style=" border-color: transparent; height: 30px; float: left; width: {{ (files[i][0][j]|length + 1) * 8 }}px; " onkeydown="this.style.width = ((this.value.length + 1) * 8) + 'px';" name="wordContainer_{{ i }}_word_{{ j }}" value="{{ files[i][0][j] }}">
+
+                    {% endfor %}
+
+
                 {% endfor %}
-            </div>
-        {% endfor %}
+                </div>
+                <br>
+                <br>
+                <button name="submit">save</button>
+            </form>
         </div>
     </body>
 </html>
