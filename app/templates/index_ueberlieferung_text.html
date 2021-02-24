@@ -5,19 +5,47 @@
         <script>
             document.addEventListener("dragstart", dragstart_handler);
             function dragstart_handler(ev) {
-                // Add different types of drag data
+
                 ev.dataTransfer.setData("text", ev.target.id);
                 console.log(ev.target.id)
                 var dropzones = document.getElementsByClassName("dropzone")
                 for (i = 0; i < dropzones.length; i++){
                     dropzones[i].style.borderColor = "gray"
                 }
+
             }
             function drop_handler(ev) {
                 ev.preventDefault();
                 if(ev.target.className === "dropzone"){
                     var data = ev.dataTransfer.getData('text');
-                ev.target.appendChild(document.getElementById(data));
+                    if(data==="new"){
+                        var categorys = document.getElementsByClassName("category")
+                        var maxId = 0
+                        for (i = 0; i < categorys.length; i++){
+                            if(parseInt(categorys[i].id) > maxId){
+                                maxId = parseInt(categorys[i].id)
+                            }
+                        }
+                        maxId=maxId+1
+                        var cln = document.getElementById(data).cloneNode(true);
+                        cln.id=maxId + ""
+                        cln.name="cat_" + maxId
+                        ev.target.appendChild(cln);
+                    }else{
+                        ev.target.appendChild(document.getElementById(data));
+                    }
+                }
+                var dropzones = document.getElementsByClassName("dropzone")
+                for (i = 0; i < dropzones.length; i++){
+                    dropzones[i].style.borderColor = "transparent"
+                }
+            }
+            function drop_handler_delete(ev) {
+                ev.preventDefault();
+                if(ev.target.className === "dropzone"){
+                    var data = ev.dataTransfer.getData('text');
+                    ev.target.appendChild(document.getElementById(data));
+                    ev.target.removeChild(document.getElementById(data));
                 }
                 var dropzones = document.getElementsByClassName("dropzone")
                 for (i = 0; i < dropzones.length; i++){
@@ -41,7 +69,7 @@
 
                     <div class="dropzone" ondrop="drop_handler(event)" ondragover="dragover_handler(event)" style=" border-style: dotted; border-color: transparent; height: 30px; display:inline-block; min-width: 5px; float: left;">
                         {% if j == 0 %}
-                            <input ondrop="return false" height="30px" width="fit-content" name="cat_{{ i }}" style="float: left; height: 30px; background-color: transparent; border-color: red; width: {{ (files[i][1]|length + 1) * 8 }}px; " id="{{i}}" draggable="true" value="{{ files[i][1] }}">
+                            <input class="category" ondrop="return false" height="30px" width="fit-content" name="cat_{{ i }}" style="float: left; height: 30px; background-color: transparent; border-color: red; width: {{ (files[i][1]|length + 1) * 8 }}px; " id="{{i}}" draggable="true" value="{{ files[i][1] }}">
                         {% endif %}
                     </div>
                     <input ondrop="return false" height="30px" width="fit-content" style=" border-color: transparent; height: 30px; float: left; width: {{ (files[i][0][j]|length + 1) * 8 }}px; " onkeydown="this.style.width = ((this.value.length + 1) * 8) + 'px';" name="wordContainer_{{ i }}_word_{{ j }}" value="{{ files[i][0][j] }}">
@@ -51,9 +79,15 @@
 
                 {% endfor %}
                 </div>
-                <br>
-                <br>
-                <button name="submit">save</button>
+                <div>
+                    <button style="float: left" name="submit">save</button>
+
+                    <input class="category" ondrop="return false" height="30px" width="fit-content" name="new" style="float: left; height: 30px; background-color: transparent; border-color: red; width: 60px; " id="new" draggable="true" value="new" onkeydown="this.style.width = ((this.value.length + 1) * 8) + 'px'; this.name = this.value;" >
+
+                    <div class="dropzone" ondrop="drop_handler_delete(event)" ondragover="dragover_handler(event)" style=" border-style: dotted; border-color: transparent; height: 30px; display:inline-block; min-width: 5px; float: right">
+                        <a>TO DELETE DRAG HERE</a>
+                    </div>
+                </div>
             </form>
         </div>
     </body>

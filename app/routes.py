@@ -48,5 +48,6 @@ def sammlung_text_post(name, text):
                 erg.append([[], "nosegment"])
             erg[len(erg)-1][0].append(request.form.get(key))
     url = beckend_endpoint + "/sammlung/{}/text/{}".format(name, text)
+    print(json.dumps(erg))
     requests.post(url, json=json.dumps(erg))
     return redirect(url_for("sammlung_text", name=name, text=text))
