@@ -1,9 +1,8 @@
 import json
 import os
 
-from flask import render_template, redirect, url_for
+from flask import render_template, redirect, url_for, request
 from app import app
-from flask import request
 import requests
 import configparser
 
@@ -11,7 +10,11 @@ config = configparser.ConfigParser()
 dir_path = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 path_config = os.path.join(dir_path, ".config")
 config.read(path_config)
-beckend_endpoint = config['BACKEND']['ip'] + ":" + config['BACKEND']['port']
+port = config['BACKEND']['port']
+beckend_endpoint = config['BACKEND']['ip']
+print(type(port))
+if port != "80":
+    beckend_endpoint = beckend_endpoint + ":" + port
 
 selected = ""
 
