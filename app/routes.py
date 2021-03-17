@@ -1,4 +1,6 @@
 import json
+import os
+
 from flask import render_template, redirect, url_for
 from app import app
 from flask import request
@@ -6,7 +8,9 @@ import requests
 import configparser
 
 config = configparser.ConfigParser()
-config.read('E:\git\CorrectFrontend\.config')
+dir_path = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+path_config = os.path.join(dir_path, ".config")
+config.read(path_config)
 beckend_endpoint = config['BACKEND']['ip'] + ":" + config['BACKEND']['port']
 
 selected = ""
@@ -44,7 +48,7 @@ def sammlung_text_post(name, text):
         if str(key).startswith("cat_"):
             erg.append([[], request.form.get(key)])
         elif str(key).startswith("wordContainer_"):
-            if len(erg) is 0:
+            if len(erg) == 0:
                 erg.append([[], "nosegment"])
             erg[len(erg)-1][0].append(request.form.get(key))
     url = beckend_endpoint + "/sammlung/{}/text/{}".format(name, text)
