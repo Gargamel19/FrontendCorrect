@@ -67,9 +67,9 @@
 
                     {% for j in range(files[i][0]|length) %}
 
-                    <div class="dropzone" ondrop="drop_handler(event)" ondragover="dragover_handler(event)" style=" border-style: dotted; border-color: transparent; height: 30px; display:inline-block; min-width: 5px; float: left;">
+                    <div class="dropzone" ondrop="drop_handler(event)" ondragover="dragover_handler(event)">
                         {% if j == 0 %}
-                            <input class="category" ondrop="return false" height="30px" width="fit-content" name="cat_{{ i }}" style="float: left; height: 30px; background-color: transparent; border-color: red; width: {{ (files[i][1]|length + 1) * 8 }}px; " id="{{i}}" draggable="true" value="{{ files[i][1] }}">
+                            <input class="category" ondrop="return false" height="30px" width="fit-content" name="cat_{{ i }}" style="width: {{ (files[i][1]|length + 1) * 8 }}px; " id="{{i}}" draggable="true" value="{{ files[i][1] }}">
                         {% endif %}
                     </div>
                     <input ondrop="return false" height="30px" width="fit-content" style=" border-color: transparent; height: 30px; float: left; width: {{ (files[i][0][j]|length + 1) * 8 }}px; " onkeydown="this.style.width = ((this.value.length + 1) * 8) + 'px';" name="wordContainer_{{ i }}_word_{{ j }}" value="{{ files[i][0][j] }}">
@@ -82,10 +82,10 @@
                 <div>
                     <button style="float: left" name="submit">save</button>
 
-                    <input class="category" ondrop="return false" height="30px" width="fit-content" name="new" style="float: left; height: 30px; background-color: transparent; border-color: red; width: 60px; " id="new" draggable="true" value="new" onkeydown="this.style.width = ((this.value.length + 1) * 8) + 'px'; this.name = this.value;" >
+                    <input class="category" ondrop="return false" height="30px" width="fit-content" name="new" id="new" draggable="true" value="new" onkeydown="this.style.width = ((this.value.length + 1) * 8) + 'px'; this.name = this.value;" >
 
-                    <div class="dropzone" ondrop="drop_handler_delete(event)" ondragover="dragover_handler(event)" style=" border-style: dotted; border-color: transparent; height: 30px; display:inline-block; min-width: 5px; float: right">
-                        <a>TO DELETE DRAG HERE</a>
+                    <div class="dropzone delete" ondrop="drop_handler_delete(event)" ondragover="dragover_handler(event)">
+                        <a class="dropzone" ondrop="drop_handler_delete(event)" ondragover="dragover_handler(event)" >TO DELETE DRAG HERE</a>
                     </div>
                 </div>
             </form>

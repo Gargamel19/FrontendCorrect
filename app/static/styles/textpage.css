@@ -25,3 +25,23 @@
 .tooltip:hover .tooltiptext {
   visibility: visible;
 }
+
+.dropzone{
+  border-style: dotted;
+  border-color: transparent;
+  height: 30px;
+  display:inline-block;
+  min-width: 5px;
+  float: left;
+}
+
+.delete{
+  float: right;
+}
+.category{
+  float: left;
+  height: 30px;
+  background-color: transparent;
+  border-color: red;
+  width: 60px;
+}
