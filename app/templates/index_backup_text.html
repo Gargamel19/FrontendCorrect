@@ -1,0 +1,32 @@
+<html>
+    <head>
+        <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/textpage.css') }}">
+        <title>{{ title }} - Correct</title>
+    </head>
+    <body>
+        <div>
+            <form method="post">
+                <div class="text" style="float: left; width: 100%">
+                {% for i in range(len) %}
+
+                    {% for j in range(files[i][0]|length) %}
+
+                    <div class="dropzone" ondrop="return false">
+                        {% if j == 0 %}
+                            <input class="category" ondrop="return false" height="30px" width="fit-content" name="cat_{{ i }}" style="width: {{ (files[i][1]|length + 1) * 8 }}px; " value="{{ files[i][1] }}" readonly>
+                        {% endif %}
+                    </div>
+                    <input ondrop="return false" height="30px" width="fit-content" style=" border-color: transparent; height: 30px; float: left; width: {{ (files[i][0][j]|length + 1) * 8 }}px; " onkeydown="this.style.width = ((this.value.length + 1) * 8) + 'px';" name="wordContainer_{{ i }}_word_{{ j }}" value="{{ files[i][0][j] }}" readonly>
+
+                    {% endfor %}
+
+
+                {% endfor %}
+                </div>
+                <div style="float: left; width: 100%">
+                    <button style="float: left" name="recover">recover</button>
+                </div>
+            </form>
+        </div>
+    </body>
+</html>

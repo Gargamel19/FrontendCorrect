@@ -1,13 +1,19 @@
 # Install:
 ## Local:
 1. install Python
-2. install Virtual-Env
-3. python -m venv venv (create new venv) - in projects root dict
-4. start venv:
-    1. Windows: venv\Scripts\activate
-    2. Linux: source venv\Scripts\activate
-5. pip install -r requirements.txt
-6. flask run
+
+   1. install Virtual-Env
+   2. python -m venv venv (create new venv) - in projects root dict
+   3. start venv:
+       1. Windows: venv\Scripts\activate
+       2. Linux: source venv\Scripts\activate
+   4. pip install -r requirements.txt
+   5. python correct_frontend.py
+   
+   OR (WINDOWS)
+   1. startvenv.bat
+
+
 
 
 ## Heroku:
@@ -19,7 +25,10 @@ The Reposetory contains the "Procfile" witch contains the starting parameter for
 1. start venv:
     1. Windows: venv\Scripts\activate
     2. Linux: source venv\Scripts\activate
-2. flask run
+2. python correct_frontend.py
+
+OR (WINDOWS)
+1. startvenv.bat
 
 ## Heroku:
 automated
