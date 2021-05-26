@@ -1,5 +1,9 @@
 Flask~=1.1.2
-pip~=20.2.1
+flask-sqlalchemy
+flask-migrate
+flask-wtf
+flask_login
+pip>=20.2.1
 Jinja2~=2.11.2
 Werkzeug~=1.0.1
 itsdangerous~=1.1.0
@@ -9,3 +13,4 @@ setuptools~=49.2.1
 configparser
 requests
 gunicorn
+email_validator
