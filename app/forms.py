@@ -2,7 +2,6 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import DataRequired, EqualTo, Email, ValidationError
 
-from app import db
 from app.models import User
 
 
@@ -19,6 +18,12 @@ class PWCForm(FlaskForm):
     submit = SubmitField('Send')
 
 
+class MAILCForm(FlaskForm):
+    mail1 = StringField('New-Mail', validators=[DataRequired()])
+    mail2 = StringField('Repeat Mail', validators=[DataRequired(), EqualTo('mail1')])
+    submit = SubmitField('Send')
+
+
 class RequestOTLForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     submit = SubmitField('Send')
@@ -32,12 +37,14 @@ class RegistrationForm(FlaskForm):
         'Repeat Password', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Register')
 
-    def validate_username(self, username):
-        user = User.query.filter_by(username=username.data).first()
-        if user is not None:
-            raise ValidationError('Please use a different username.')
 
-    def validate_email(self, email):
-        user = User.query.filter_by(email=email.data).first()
-        if user is not None:
-            raise ValidationError('Please use a different email address.')
+def validate_username(username):
+    user = User.query.filter_by(username=username.data).first()
+    if user is not None:
+        raise ValidationError('Please use a different username.')
+
+
+def validate_email(email):
+    user = User.query.filter_by(email=email.data).first()
+    if user is not None:
+        raise ValidationError('Please use a different email address.')

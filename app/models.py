@@ -11,8 +11,8 @@ import string
 
 
 @login.user_loader
-def load_user(id):
-    return User.query.get(int(id))
+def load_user(aid):
+    return User.query.get(int(aid))
 
 
 class User(UserMixin, db.Model):
@@ -23,6 +23,12 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(128))
     one_time_link_hash = db.Column(db.String(128))
     one_time_link_date = db.Column(db.DateTime(), index=True, default=datetime.utcnow)
+    super_user = db.Column(db.Boolean())
+
+    def __init__(self, username, email, super_user):
+        self.username = username
+        self.email = email
+        self.super_user = super_user
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
@@ -39,3 +45,6 @@ class User(UserMixin, db.Model):
         self.one_time_link_date = datetime.now() + timedelta(minutes=10)
         db.session.commit()
         return self.one_time_link_hash
+
+    def set_mail(self, mail):
+        self.email = mail

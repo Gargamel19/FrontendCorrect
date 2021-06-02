@@ -1,0 +1,21 @@
+{% block content %}
+    <h1>Change_MAIL</h1>
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.mail1.label }}<br>
+            {{ form.mail1(size=32) }}<br>
+            {% for error in form.mail1.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.mail2.label }}<br>
+            {{ form.mail2(size=32) }}<br>
+            {% for error in form.mail2.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+{% endblock %}
