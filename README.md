@@ -12,6 +12,11 @@
    
    OR (WINDOWS)
    1. startvenv.bat
+   
+   wen no db file has been created: 
+      1. flask db init
+      2. flask db migrate -m "users table"
+      3. flask db upgrade
 
 
 
