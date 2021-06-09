@@ -15,3 +15,10 @@ jobs:
         run: |
           ls ${{ github.workspace }}
       - run: echo "🍏 This job's status is ${{ job.status }}."
+      - name: Test with pytest
+        run: |
+          pip install pytest
+          pip install pytest-cov
+          pytest tests.py --doctest-modules --junitxml=junit/test-results.xml --cov=com --cov-report=xml --cov-report=html
+      - name: Coveralls GitHub Action
+        uses: coverallsapp/github-action@v1.1.2
