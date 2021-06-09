@@ -12,8 +12,9 @@ jobs:
       with:
         version: 10.x
 
-    - name: Unit tests
-      run: make test PYTHON_WITH_VERSION=python3
+    - name: Test with unittest
+      run: |
+        python -m unittest
 
   finish:
     needs: test
