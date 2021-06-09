@@ -5,11 +5,6 @@ name: Test Coveralls Parallel
 jobs:
   test:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        test_number:
-          - 1
-          - 2
     steps:
     - uses: actions/checkout@master
     - name: Use Node.js 10.x
@@ -17,17 +12,8 @@ jobs:
       with:
         version: 10.x
 
-    - name: npm install
-      run: npm install
-
-    - name: Test ${{ matrix.test_number }}
-      run: make test-coverage-${{ matrix.test_number }}
-    - name: Coveralls Parallel
-      uses: coverallsapp/github-action@master
-      with:
-        github-token: ${{ secrets.github_token }}
-        flag-name: run-${{ matrix.test_number }}
-        parallel: true
+    - name: Unit tests
+      run: make test PYTHON_WITH_VERSION=python3
 
   finish:
     needs: test
