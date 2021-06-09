@@ -4,7 +4,7 @@ from datetime import datetime
 from flask import render_template, redirect, url_for, request, flash
 from werkzeug.urls import url_parse
 
-from app import app, db
+from app import app
 import requests
 
 import smtplib
