@@ -26,6 +26,3 @@ SQLAlchemy==1.4.15
 urllib3==1.26.2
 Werkzeug==1.0.1
 WTForms==2.3.3
-Flask-Migrate
-Flask-Script
-psycopg2
