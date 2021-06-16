@@ -16,7 +16,7 @@ MY_IP = os.environ.get('MY_IP') or "http://127.0.0.1:5000/"
 #BACKEND_IP = "https://be-correct.herokuapp.com/"
 BACKEND_IP = os.environ.get('BACKEND_IP') or "http://127.0.0.1"
 #BACKEND_PORT = 80
-BACKEND_PORT = os.environ.get('BACKEND_PORT') or 5001
+BACKEND_PORT = int(os.environ.get('BACKEND_PORT')) or 5001
 
 START_PORT = 0
 
