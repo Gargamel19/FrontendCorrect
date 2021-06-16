@@ -1,16 +1,18 @@
 from flask import Flask
 from flask_login import LoginManager
 import app.config as config
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
+from app.commands import create_tables
+
+from app.extentions import db, login_manager
 
 app = Flask(__name__)
 app.config.from_object(config)
-db = SQLAlchemy(app)
-db.create_all()
-migrate = Migrate(app, db)
+
+db.init_app(app)
 
 login = LoginManager(app)
 login.login_view = 'login'
+
+app.cli.add_command(create_tables)
 
 from app import routes, models
