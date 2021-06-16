@@ -60,6 +60,7 @@
         </script>
     </head>
     <body>
+        {% include 'topnav.html' %}
         <div style="float:left; width: 100%">
             <h1>TEXT</h1>
             <form method="post">
@@ -70,10 +71,12 @@
 
                     <div class="dropzone" ondrop="drop_handler(event)" ondragover="dragover_handler(event)">
                         {% if j == 0 %}
-                            <input class="category" ondrop="return false" height="30px" width="fit-content" name="cat_{{ i }}" style="width: {{ (files[i][1]|length + 1) * 8 }}px; " id="{{i}}" draggable="true" value="{{ files[i][1] }}">
+                            <input class="category" ondrop="return false" height="30px" width="fit-content" name="cat_{{ i }}" style='width:{{(files[i][1]|length+1) * 8 }}px; ' id="{{i}}" draggable="true" value="{{ files[i][1] }}">
                         {% endif %}
                     </div>
-                    <input ondrop="return false" height="30px" width="fit-content" style=" border-color: transparent; height: 30px; float: left; width: {{ (files[i][0][j]|length + 1) * 8 }}px; " onkeydown="this.style.width = ((this.value.length + 1) * 8) + 'px';" name="wordContainer_{{ i }}_word_{{ j }}" value="{{ files[i][0][j] }}">
+                    {% if files[i][0][j] != None %}
+                        <input ondrop="return false" height="30px" width="fit-content" style=' border-color: transparent; height: 30px; float: left; width: {{(files[i][0][j]|length+1) * 8 }}px' onkeydown='this.style.width = ((this.value.length + 1) * 8) + "px";' name="wordContainer_{{ i }}_word_{{ j }}" value="{{ files[i][0][j] }}">
+                    {% endif %}
 
                     {% endfor %}
 
@@ -94,7 +97,7 @@
             <h1>backups</h1>
         </div>
         <div style="float:left; width: 100%; height: auto">
-            {% include 'index_backups.html' %}
+            {% include 'backups.html' %}
 
         </div>
     </body>

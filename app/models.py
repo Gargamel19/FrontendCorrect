@@ -36,6 +36,9 @@ class User(UserMixin, db.Model):
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
 
+    def set_mail(self, mail):
+        self.email = mail
+
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
@@ -46,5 +49,6 @@ class User(UserMixin, db.Model):
         db.session.commit()
         return self.one_time_link_hash
 
-    def set_mail(self, mail):
-        self.email = mail
+    def save_user(self):
+        db.session.add(self)
+        db.session.commit()

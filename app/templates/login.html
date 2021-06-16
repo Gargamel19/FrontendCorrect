@@ -1,3 +1,4 @@
+{% include 'topnav.html' %}
 {% block content %}
     <h1>Sign In</h1>
     <form action="" method="post" novalidate>
@@ -16,10 +17,8 @@
             <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
         </p>
-        <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
         <p>{{ form.submit() }}</p>
     </form>
 
-    <p>New User? <a href="{{ url_for('register') }}">Click to Register!</a></p>
     <p>forgot Password? <a href="{{ url_for('change_pw') }}">Click to Change Password</a></p>
 {% endblock %}

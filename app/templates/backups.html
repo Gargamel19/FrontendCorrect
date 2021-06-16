@@ -3,10 +3,9 @@
         <title>{{ title }} - Correct</title>
     </head>
     <body>
-        {% include 'topnav.html' %}
-        {% for file in files %}
+        {% for backup in backups %}
         <h2>
-            <a href="{{ url + '/text/' + file }}">{{ file }}</a>
+            <a href="{{ url + '/backup/' + backup[0] }}">{{ backup[1] }}</a>
         </h2>
         {% endfor %}
     </body>

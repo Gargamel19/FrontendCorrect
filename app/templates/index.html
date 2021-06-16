@@ -3,6 +3,7 @@
         <title>{{ title }} - Correct</title>
     </head>
     <body>
+        {% include 'topnav.html' %}
         {% for file in files %}
         <h1><div><a href="{{ url + 'sammlung/' + file }}">{{ file }}</a></div></h1>
         {% endfor %}
