@@ -14,11 +14,12 @@ from app.models import User
 from flask_login import current_user, login_user, logout_user, login_required
 
 
-port = app.config["BACKEND_PORT"]
 my_ip = app.config["MY_IP"]
 backend_endpoint = app.config["BACKEND_IP"]
-if port != "80":
+port = app.config["BACKEND_PORT"]
+if port != 80:
     backend_endpoint = backend_endpoint + ":" + str(port)
+print(backend_endpoint)
 
 # # # # # # MAILS # # # # # #
 
@@ -176,6 +177,8 @@ def change_mail():
 @login_required
 def ueberlieferung():
     response = requests.get(backend_endpoint + "/sammlungen")
+    print(backend_endpoint + "/sammlungen")
+    print(response.text)
     files = json.loads(response.text)
     return render_template('index.html', title='Home', files=files, url=request.url)
 
