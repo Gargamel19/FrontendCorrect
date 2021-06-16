@@ -6,6 +6,7 @@ flask_login
 flask_sqlalchemy
 flask_migrate
 flask_wtf
+email_validator
 dnspython~=2.1.0
 idna~=2.10
 pip~=21.1.2
