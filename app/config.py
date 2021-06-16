@@ -10,11 +10,11 @@ SQLALCHEMY_TRACK_MODIFICATIONS = True
 
 # IP
 
-MY_IP = "https://correctfrontend.herokuapp.com/"
+MY_IP = "http://127.0.0.1:5000/"
 
 # BACKEND
 BACKEND_IP = "https://be-correct.herokuapp.com/"
-BACKEND_PORT = 5001
+BACKEND_PORT = 80
 
 START_PORT = 0
 
