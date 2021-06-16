@@ -1,12 +1,3 @@
-<html>
-    <head>
-        <title>{{ title }} - Correct</title>
-    </head>
-    <body>
-        {% for backup in backups %}
-        <h2>
-            <a href="{{ url + '/backup/' + backup[0] }}">{{ backup[1] }}</a>
-        </h2>
-        {% endfor %}
-    </body>
-</html>
+
+{% include 'topnav.html' %}
+{% include 'backups.html' %}
