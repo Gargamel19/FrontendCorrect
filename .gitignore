@@ -2,8 +2,8 @@
 
 /venv
 .idea
+app/app.db
 __pycache__
-app.db
 
 # dependencies
 /node_modules
