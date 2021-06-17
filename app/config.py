@@ -24,7 +24,8 @@ else:
 START_PORT = 0
 
 # MAIL
-MAIL_USERNAME = "notreply.supersicher@gmail.com"
-MAIL_SECRET = "supersicherespasswort"
-SMTP_SERVER = "smtp.gmail.com"
-TLS_PORT = 587
+SMTP_SERVER = os.environ.get('MAIL_SERVER')
+TLS_PORT = int(os.environ.get('MAIL_PORT') or 25)
+MAIL_USE_TLS = os.environ.get('MAIL_USE_TLS') is not None
+MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
+MAIL_SECRET = os.environ.get('MAIL_PASSWORD')
