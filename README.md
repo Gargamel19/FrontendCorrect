@@ -13,10 +13,12 @@
    OR (WINDOWS)
    1. startvenv.bat
    
-   wen no db file has been created: 
-      1. flask db init
-      2. flask db migrate -m "users table"
-      3. flask db upgrade
+   when no db file has been created: 
+   1. flask create_tables
+   
+   Add user to DB
+   1. flask <user_name> <user_email> <user_pw> <user_superuser_True_or_False>
+       1. E.g., flask matt matt@matt_mail.com matt_hard_password True
 
 
 

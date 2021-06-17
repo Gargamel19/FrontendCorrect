@@ -63,11 +63,6 @@ def get_backup_list(name, text):
         new_backups.append([backup, str(dt)])
     return new_backups
 
-@app.route("/user")
-def ferdi():
-    add_user("FettarmQP", "trendelenburger19.04@googlemail.com", "Pa55wort", True)
-    return redirect(url_for('login'))
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
