@@ -3,12 +3,13 @@ from flask_login import LoginManager
 import app.config as config
 from app.commands import create_tables, add_user
 
-from app.extentions import db, login_manager
+from app.extentions import db, login_manager, migrate
 
 app = Flask(__name__)
 app.config.from_object(config)
 
 db.init_app(app)
+migrate.init_app(app, db)
 
 login = LoginManager(app)
 login.login_view = 'login'

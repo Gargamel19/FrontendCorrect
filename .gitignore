@@ -3,7 +3,7 @@
 /venv
 /.idea
 .idea/
-app/__pycache__/
+__pycache__
 
 # dependencies
 /node_modules
@@ -26,3 +26,4 @@ app/__pycache__/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+app/app.db
