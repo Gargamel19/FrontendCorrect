@@ -44,7 +44,7 @@ def add_user(username, email, password, super_user):
 
 def send_mail(receiver, subject, text):
     mail_text = EmailMessage()
-    mail_text.set_content(mail_text)
+    mail_text.set_content(text)
     mail_text['Subject'] = subject
     mail_text['From'] = mail_sender_address
     mail_text['To'] = receiver
