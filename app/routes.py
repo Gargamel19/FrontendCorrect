@@ -43,7 +43,7 @@ def add_user(username, email, password, super_user):
 def send_mail(receiver, subject, text):
     mail_text = text
     data = 'From:' + mail_user + "\nTo:" + receiver + "\nSubject:" + subject + "\n\n" + mail_text
-    server = smtplib.SMTP(smtp_server + ":" + TLS_PORT)
+    server = smtplib.SMTP(smtp_server + ":" + str(TLS_PORT))
     server.starttls()
     server.login(mail_user, mail_password)
     server.sendmail(mail_user, receiver, data)
