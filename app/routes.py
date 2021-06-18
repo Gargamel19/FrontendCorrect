@@ -26,6 +26,7 @@ mail_user = app.config["MAIL_USERNAME"]
 mail_password = app.config["MAIL_SECRET"]
 smtp_server = app.config["SMTP_SERVER"]
 TLS_PORT = app.config["TLS_PORT"]
+mail_sender_address = app.config["MAIL_ADMINS"]
 
 # # # # # # Mails end # # # # # #
 
@@ -46,7 +47,7 @@ def send_mail(receiver, subject, text):
     server.starttls()
     if mail_user and mail_password:
         server.login(mail_user, mail_password)
-    server.sendmail(mail_user, receiver, data)
+    server.sendmail(mail_sender_address, receiver, data)
     server.quit()
 
 
