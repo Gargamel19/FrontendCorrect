@@ -110,9 +110,11 @@ def register():
                 user_dummy.save_user()
                 send_mail(user_dummy.email, "anmeldung war erfolgreich",
                           "your registration was successfull: " + my_ip + "/login")
-                return 'Congratulations, you are now a registered user!'
+                flash('Congratulations, you are now a registered user!')
+                return redirect(url_for('login'))
             return render_template('register.html', title='Register', form=form, username=username)
-    return "YOU ARE NOT ALLOWED TO CREATE A NEW USER"
+    flash("YOU ARE NOT ALLOWED TO CREATE A NEW USER")
+    return redirect(url_for('login'))
 
 
 @app.route('/change_pw', methods=['GET', 'POST'])
@@ -125,8 +127,10 @@ def change_pw():
             if user_dummy.one_time_link_date > datetime.now():
                 user_dummy.set_password(form.password.data)
                 user_dummy.save_user()
-                return 'Congratulations, you have changed your PW'
-            return "The Link has been aspired"
+                flash('Congratulations, you have changed your PW')
+                return redirect(url_for('login'))
+            flash("The Link has expired")
+            redirect(url_for('login'))
         return render_template('change_pw.html', title='Change_PW', form=form)
     else:
         if current_user.is_authenticated:
@@ -147,9 +151,8 @@ def change_pw():
                     url = my_ip + "/change_pw?otl=" + otl
                     send_mail(user_dummy.email, "Verifizierung der aenderung ihres Passwords",
                               "Click this link to change your Password: " + url)
-                    return "CHECK YOUT E-MAIL"
-                else:
-                    return "USER HAS NOT BEEN FOUND"
+                flash("CHECK YOUR E-MAIL")
+                return redirect(url_for('login'))
             return render_template('request_otl.html', title='Change_Password', form=form)
 
 
