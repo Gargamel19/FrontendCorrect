@@ -8,6 +8,7 @@ from app import app
 import requests
 
 import smtplib
+from email.message import EmailMessage
 
 from app.forms import LoginForm, RegistrationForm, PWCForm, RequestOTLForm, MAILCForm
 from app.models import User
@@ -41,13 +42,16 @@ def add_user(username, email, password, super_user):
         user.save_user()
 
 def send_mail(receiver, subject, text):
-    mail_text = text
-    data = 'From:' + mail_user + "\nTo:" + receiver + "\nSubject:" + subject + "\n\n" + mail_text
+    mail_text = EmailMessage()
+    mail_text.set_content(mail_text)
+    mail_text['Subject'] = subject
+    mail_text['From'] = mail_sender_address
+    mail_text['To'] = receiver
     server = smtplib.SMTP(smtp_server + ":" + str(TLS_PORT))
     server.starttls()
     if mail_user and mail_password:
         server.login(mail_user, mail_password)
-    server.sendmail(mail_sender_address, receiver, data)
+    server.send_message(mail_text)
     server.quit()
 
 
