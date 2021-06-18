@@ -44,7 +44,8 @@ def send_mail(receiver, subject, text):
     data = 'From:' + mail_user + "\nTo:" + receiver + "\nSubject:" + subject + "\n\n" + mail_text
     server = smtplib.SMTP(smtp_server + ":" + str(TLS_PORT))
     server.starttls()
-    server.login(mail_user, mail_password)
+    if mail_user and mail_password:
+        server.login(mail_user, mail_password)
     server.sendmail(mail_user, receiver, data)
     server.quit()
 
