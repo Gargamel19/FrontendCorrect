@@ -32,3 +32,4 @@ TLS_PORT = int(os.environ.get('MAIL_PORT') or 25)
 MAIL_USE_TLS = os.environ.get('MAIL_USE_TLS') is not None
 MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
 MAIL_SECRET = os.environ.get('MAIL_PASSWORD')
+MAIL_ADMINS = os.environ.get('MAIL_ADMINS').split(';') if os.environ.get('ADMINS') else ['no-reply@example.com']
