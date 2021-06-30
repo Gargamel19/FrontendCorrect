@@ -3,6 +3,7 @@
         <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/textpage.css') }}">
         <title>{{ title }} - Correct</title>
         <script>
+
             document.addEventListener("dragstart", dragstart_handler);
             function dragstart_handler(ev) {
 
@@ -56,6 +57,61 @@
                 ev.preventDefault();
                 ev.dataTransfer.dropEffect = "move";
             }
+            function showPupup(id1, id2) {
+
+                var infoboxes = document.getElementsByClassName("infobox")
+
+                for (i = 0; i < infoboxes.length; i++){
+                    infoboxes[i].style.display = "none";
+                }
+                var popup = document.getElementById("affBox_" + id1 + "_" + id2);
+                popup.style.display = "inline";
+            }
+            function removeRow(id1, id2, row) {
+                var empTab = document.getElementById('tab_' + id1 + '_' + id2);
+                empTab.rows[row].remove()
+                showPupup(id1, id2)
+
+            }
+
+            function addNewRow(id1, id2){
+                var arrHead = new Array();	// array for header.
+                arrHead = ['Attributes:', ''];
+
+                var empTab = document.getElementById('tab_' + id1 + '_' + id2);
+
+                var rowCnt = empTab.rows.length;   // table row count.
+
+                empTab.rows[rowCnt-1].remove()
+
+                tr1 = empTab.insertRow(rowCnt-1);
+
+                var ele1 = document.createElement('input');
+                ele1.setAttribute('name', "attKey_"+ id1 +"_"+ id2 +"_"+(rowCnt-2));
+                var ele2 = document.createElement('input');
+                ele2.setAttribute('name', "attValue_"+ id1 +"_"+ id2 +"_"+(rowCnt-2));
+                var ele3 = document.createElement('div');
+                ele3.setAttribute('onclick', "removeRow(" + id1 + "," + id2 + "," + (rowCnt-1) + ")");
+                ele3.innerText = "X"
+
+                td2 = tr1.insertCell(0);
+                td2.appendChild(ele1)
+                td2 = tr1.insertCell(1);
+                td2.appendChild(ele2)
+                td2 = tr1.insertCell(2);
+                td2.appendChild(ele3)
+
+                //<input onClick="addNewRow({{i}},{{j}})">
+                tr = empTab.insertRow(rowCnt);
+
+                td = tr.insertCell(0);
+                var ele = document.createElement('input');
+                ele.setAttribute('onClick', "addNewRow("+ id1 +","+ id2 +")");
+                td.appendChild(ele);
+
+
+
+            }
 
         </script>
     </head>
@@ -64,33 +120,67 @@
         <div style="float:left; width: 100%">
             <h1>TEXT</h1>
             <form method="post">
-                <div class="text" style="float: left">
+                <div class="text" style="float: left; width: 80%">
                 {% for i in range(len) %}
 
-                    {% for j in range(files[i][0]|length) %}
+                    {% for j in range(files[i][1]|length) %}
 
-                    <div class="dropzone" ondrop="drop_handler(event)" ondragover="dragover_handler(event)">
-                        {% if j == 0 %}
-                            <input class="category" ondrop="return false" height="30px" width="fit-content" name="cat_{{ i }}" style='width:{{(files[i][1]|length+1) * 8 }}px; ' id="{{i}}" draggable="true" value="{{ files[i][1] }}">
+                        <div class="dropzone" ondrop="drop_handler(event)" ondragover="dragover_handler(event)">
+
+                            {% if j == 0 %}
+                                <input class="category" ondrop="return false" height="30px" width="fit-content" name="cat_{{ i }}" style='width:{{(files[i][0]|length+1) * 8 }}px; ' id="{{i}}" draggable="true" value="{{ files[i][0] }}">
+                            {% endif %}
+                        </div>
+                        {% if files[i][1][j] != None %}
+                            <input onclick="showPupup({{i}},{{j}})" ondrop="return false" height="30px" width="fit-content" style='z-index: 2; border-color: transparent; height: 30px; float: left; width: {{(files[i][1][j][0]|length+1) * 8 }}px' onkeydown='this.style.width = ((this.value.length + 1) * 8) + "px";' name="wordContainer_{{ i }}_word_{{ j }}" value="{{ files[i][1][j][0] }}">
+                                {% for z in range(files[i][1][j][1]|length) %}
+                                    <div class="infobox stack-top" id="affBox_{{ i }}_{{ j }}" style="display: none; float:left">
+                                        <table id="tab_{{i}}_{{j}}" style="border-style: solid; width: 100%">
+                                            <tr style="width: 100%">
+                                                <th style="width: 50%">Attributes:</th>
+                                            </tr >
+                                            {% for z in range(files[i][1][j][1]|length) %}
+                                            <tr style="width: 100%">
+                                                <td style="width: 50%">
+                                                    <input name="attKey_{{i}}_{{j}}_{{z}}" value="{{files[i][1][j][1][z][0]}}">
+                                                </td>
+                                                <td style="width: 40%">
+                                                    <input name="attValue_{{i}}_{{j}}_{{z}}" value="{{files[i][1][j][1][z][1]}}">
+
+                                                </td>
+                                                <td style="width: 10%">
+                                                    <div onclick="removeRow({{i}},{{j}},{{z}}+1)">
+                                                        X
+                                                    </div>
+
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                            <tr style="width: 100%">
+                                                <td style="width: 50%">
+                                                    <input onclick="addNewRow({{i}},{{j}})">
+                                                </td>
+                                            </tr>
+                                        </table>
+
+                                    </div>
+                                {% endfor %}
                         {% endif %}
-                    </div>
-                    {% if files[i][0][j] != None %}
-                        <input ondrop="return false" height="30px" width="fit-content" style=' border-color: transparent; height: 30px; float: left; width: {{(files[i][0][j]|length+1) * 8 }}px' onkeydown='this.style.width = ((this.value.length + 1) * 8) + "px";' name="wordContainer_{{ i }}_word_{{ j }}" value="{{ files[i][0][j] }}">
-                    {% endif %}
 
                     {% endfor %}
 
                 {% endfor %}
                 </div>
-                <div>
+                <div style="float: left; width: 80%">
                     <button style="float: left" name="submit">save</button>
+                    <input style="float: left" class="category" ondrop="return false" height="30px" width="fit-content" name="new" id="new" draggable="true" value="new" onkeydown="this.style.width = ((this.value.length + 1) * 8) + 'px'; this.name = this.value;" >
 
-                    <input class="category" ondrop="return false" height="30px" width="fit-content" name="new" id="new" draggable="true" value="new" onkeydown="this.style.width = ((this.value.length + 1) * 8) + 'px'; this.name = this.value;" >
-
-                    <div class="dropzone delete" ondrop="drop_handler_delete(event)" ondragover="dragover_handler(event)">
+                    <div  class="dropzone delete" ondrop="drop_handler_delete(event)" ondragover="dragover_handler(event)">
                         <a class="dropzone" ondrop="drop_handler_delete(event)" ondragover="dragover_handler(event)" >TO DELETE DRAG HERE</a>
                     </div>
                 </div>
+
+
             </form>
         </div>
         <div style="float:left; width: 100%; height: 10%">
