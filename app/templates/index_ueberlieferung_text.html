@@ -69,6 +69,17 @@
             }
             function removeRow(id1, id2, row) {
                 var empTab = document.getElementById('tab_' + id1 + '_' + id2);
+                console.log(empTab.rows[row])
+                var tds = empTab.rows[row].getElementsByTagName("td");
+                for (i = 0; i < tds.length; i++){
+                    console.log(tds[i])
+                    var inputs = tds[i].getElementsByTagName("input");
+                    for (j = inputs.length-1; j >=0 ; j--){
+                        inputs[j].name = "REMOVED"
+                    }
+                    console.log(tds[i])
+                    tds[i].remove()
+                }
                 empTab.rows[row].remove()
                 showPupup(id1, id2)
 
@@ -108,11 +119,7 @@
                 var ele = document.createElement('input');
                 ele.setAttribute('onClick', "addNewRow("+ id1 +","+ id2 +")");
                 td.appendChild(ele);
-
-
-
             }
-
         </script>
     </head>
     <body>

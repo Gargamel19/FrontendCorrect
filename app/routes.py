@@ -230,8 +230,16 @@ def backup_of_text(name, text, backup):
     response = requests.get(backend_endpoint + "/sammlung/{}/text/{}/backup/{}".format(name, text, backup))
     files = json.loads(response.text)
     return_list = []
+
     for form in files:
-        return_list.append([form[0], form[1]])
+        words = []
+        for word in form["words"]:
+            args = []
+            for key in word[1].keys():
+                args.append([key, word[1][key]])
+            words.append([word[0], args])
+
+        return_list.append([form["function"], words])
     return render_template('index_backup_text.html', title='Backup', files=return_list,
                            url=request.url, len=len(return_list), username=username)
 
@@ -239,7 +247,6 @@ def backup_of_text(name, text, backup):
 @app.route('/sammlung/<name>/text/<text>/backup/<backup>', methods=['POST'])
 @login_required
 def restore_backup(name, text, backup):
-    username = get_username_from_current_user(current_user)
     url = backend_endpoint + "/sammlung/{}/text/{}/backup/{}".format(name, text, backup)
     requests.post(url)
     return redirect(url_for("sammlung_text", name=name, text=text))
@@ -262,6 +269,7 @@ def sammlung_text_post(name, text):
             newkey = request.form.get("attKey_" + str(key).replace(str(key).split("_")[0] + "_", ""))
             if newkey != "":
                 erg[len(erg) - 1]["words"][len(erg[len(erg) - 1]["words"]) - 1][1][newkey] = request.form.get(key)
+    print(erg)
     url = backend_endpoint + "/sammlung/{}/text/{}".format(name, text)
     requests.post(url, json=json.dumps(erg, ensure_ascii=False))
     return redirect(url_for("sammlung_text", name=name, text=text))
