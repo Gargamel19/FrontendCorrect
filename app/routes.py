@@ -56,8 +56,6 @@ def get_backup_list(name, text):
     new_backups = []
     for backup in backups:
         content = backup.replace("_r_.xml", "").split("-")[1:]
-        print(int(content[0]), int(content[1]), int(content[2]), int(content[3]), int(content[4]),
-              int(content[5].split(".")[0]))
         dt = datetime(year=int(content[0]), month=int(content[1]), day=int(content[2]),
                       hour=int(content[3]), minute=int(content[4]), second=int(content[5].split(".")[0]))
         new_backups.append([backup, str(dt)])
@@ -178,7 +176,6 @@ def ueberlieferung():
     username = get_username_from_current_user(current_user)
     response = requests.get(backend_endpoint + "/sammlungen")
     print(backend_endpoint + "/sammlungen")
-    print(response.text)
     files = json.loads(response.text)
     return render_template('index.html', title='Home', files=files, url=request.url, username=username)
 
@@ -267,9 +264,8 @@ def sammlung_text_post(name, text):
             if len(erg) == 0:
                 erg.append({"function": "nosegment", "words": ["", {}]})
             newkey = request.form.get("attKey_" + str(key).replace(str(key).split("_")[0] + "_", ""))
-            if newkey != "":
+            if newkey != "" and not newkey.startswith("[REMOVED] "):
                 erg[len(erg) - 1]["words"][len(erg[len(erg) - 1]["words"]) - 1][1][newkey] = request.form.get(key)
-    print(erg)
     url = backend_endpoint + "/sammlung/{}/text/{}".format(name, text)
     requests.post(url, json=json.dumps(erg, ensure_ascii=False))
     return redirect(url_for("sammlung_text", name=name, text=text))

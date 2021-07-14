@@ -53,12 +53,60 @@
   z-index: 0;
 }
 
+.text{
+  float: left;
+  width: 75%;
+  border: #333333;
+  border-style: solid;
+}
+
+.word{
+  z-index: 2;
+  border-color: transparent;
+  height: 30px;
+  float: left;
+}
+
+.bot-part{
+  float: left;
+  width: 75%;
+}
+
+.save-button{
+  float: left;
+}
+
+.new-input{
+  float: left;
+}
+
+.backup-part{
+  float:left;
+  width: 100%;
+  height: 10%;
+}
 
 .stack-top{
-  left: 80%;
+  float:left;
   top: 20%;
-
-  width: 20%;
+  width: 15%;
+  left: 78%;
   position: absolute;
   z-index: 10;
+  display: none;
+}
+
+.stack-top table{
+  border-style: solid;
+  width: 100%;
+}
+
+.stack-top table tr {
+  width: 100%;
+}
+.stack-top table tr th {
+  width: 50%;
+}
+.stack-top table tr td {
+  width: 50%;
 }
