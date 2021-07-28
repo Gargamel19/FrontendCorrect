@@ -1,7 +1,4 @@
 import os
-from dotenv import load_dotenv
-basedir = os.path.abspath(os.path.dirname(__file__))
-load_dotenv(os.path.join(basedir, '.env'))
 
 BASEDIR = os.path.abspath(os.path.dirname(__file__))
 SECRET_KEY = os.environ.get('SECRET_KEY') or 'you-will-never-guess'
@@ -27,9 +24,7 @@ else:
 START_PORT = 0
 
 # MAIL
-SMTP_SERVER = os.environ.get('MAIL_SERVER')
-TLS_PORT = int(os.environ.get('MAIL_PORT') or 25)
-MAIL_USE_TLS = os.environ.get('MAIL_USE_TLS') is not None
-MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
-MAIL_SECRET = os.environ.get('MAIL_PASSWORD')
-MAIL_ADMINS = os.environ.get('MAIL_ADMINS').split(';') if os.environ.get('MAIL_ADMINS') else ['no-reply@example.com']
+MAIL_USERNAME = "notreply.supersicher@gmail.com"
+MAIL_SECRET = "supersicherespasswort"
+SMTP_SERVER = "smtp.gmail.com"
+TLS_PORT = 587
