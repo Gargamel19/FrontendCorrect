@@ -62,8 +62,6 @@ def get_backup_list(name, text):
     new_backups = []
     for backup in backups:
         content = backup.replace("_r_.xml", "").split("-")[1:]
-        print(int(content[0]), int(content[1]), int(content[2]), int(content[3]), int(content[4]),
-              int(content[5].split(".")[0]))
         dt = datetime(year=int(content[0]), month=int(content[1]), day=int(content[2]),
                       hour=int(content[3]), minute=int(content[4]), second=int(content[5].split(".")[0]))
         new_backups.append([backup, str(dt)])
@@ -187,7 +185,6 @@ def ueberlieferung():
     username = get_username_from_current_user(current_user)
     response = requests.get(backend_endpoint + "/sammlungen")
     print(backend_endpoint + "/sammlungen")
-    print(response.text)
     files = json.loads(response.text)
     return render_template('index.html', title='Home', files=files, url=request.url, username=username)
 
@@ -208,8 +205,17 @@ def sammlung_text(name, text):
     response = requests.get(backend_endpoint + "/sammlung/{}/text/{}".format(name, text))
     files = json.loads(response.text)
     return_list = []
+
     for form in files:
-        return_list.append([form[0], form[1]])
+        words = []
+        for word in form["words"]:
+            args = []
+            for key in word[1].keys():
+                args.append([key, word[1][key]])
+            words.append([word[0], args])
+
+        return_list.append([form["function"], words])
+
     return render_template('index_ueberlieferung_text.html', title='Text', files=return_list,
                            url=request.url, len=len(return_list), backups=get_backup_list(name, text), username=username)
 
@@ -230,8 +236,16 @@ def backup_of_text(name, text, backup):
     response = requests.get(backend_endpoint + "/sammlung/{}/text/{}/backup/{}".format(name, text, backup))
     files = json.loads(response.text)
     return_list = []
+
     for form in files:
-        return_list.append([form[0], form[1]])
+        words = []
+        for word in form["words"]:
+            args = []
+            for key in word[1].keys():
+                args.append([key, word[1][key]])
+            words.append([word[0], args])
+
+        return_list.append([form["function"], words])
     return render_template('index_backup_text.html', title='Backup', files=return_list,
                            url=request.url, len=len(return_list), username=username)
 
@@ -239,7 +253,6 @@ def backup_of_text(name, text, backup):
 @app.route('/sammlung/<name>/text/<text>/backup/<backup>', methods=['POST'])
 @login_required
 def restore_backup(name, text, backup):
-    username = get_username_from_current_user(current_user)
     url = backend_endpoint + "/sammlung/{}/text/{}/backup/{}".format(name, text, backup)
     requests.post(url)
     return redirect(url_for("sammlung_text", name=name, text=text))
@@ -251,11 +264,17 @@ def sammlung_text_post(name, text):
     erg = []
     for key in request.form.keys():
         if str(key).startswith("cat_"):
-            erg.append([[], request.form.get(key)])
+            erg.append({"function": request.form.get(key), "words": []})
         elif str(key).startswith("wordContainer_"):
             if len(erg) == 0:
-                erg.append([[], "nosegment"])
-            erg[len(erg) - 1][0].append(request.form.get(key))
+                erg.append({"function": "nosegment", "words": []})
+            erg[len(erg) - 1]["words"].append([request.form.get(key), {}])
+        elif str(key).startswith("attValue_"):
+            if len(erg) == 0:
+                erg.append({"function": "nosegment", "words": ["", {}]})
+            newkey = request.form.get("attKey_" + str(key).replace(str(key).split("_")[0] + "_", ""))
+            if newkey != "" and not newkey.startswith("[REMOVED] "):
+                erg[len(erg) - 1]["words"][len(erg[len(erg) - 1]["words"]) - 1][1][newkey] = request.form.get(key)
     url = backend_endpoint + "/sammlung/{}/text/{}".format(name, text)
     requests.post(url, json=json.dumps(erg, ensure_ascii=False))
     return redirect(url_for("sammlung_text", name=name, text=text))

@@ -1,1 +1,2 @@
-venv\Scripts\activate & python correct_frontend.py
+py -m venv env
+.\env\Scripts\activate & pip install -r requirements.txt & python correct_frontend.py
