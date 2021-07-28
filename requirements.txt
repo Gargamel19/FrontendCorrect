@@ -29,4 +29,5 @@ greenlet~=1.1.0
 gunicorn~=20.1.0
 setuptools~=49.2.1
 attrs~=20.3.0
-psycopg2~=2.8.6
+#psycopg2~=2.8.6 # I got error messages when trying to install this
+psycopg2-binary # They suggest using this for most systems: https://www.psycopg.org/docs/install.html

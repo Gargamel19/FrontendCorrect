@@ -8,6 +8,7 @@ from app import app
 import requests
 
 import smtplib
+from email.message import EmailMessage
 
 from app.forms import LoginForm, RegistrationForm, PWCForm, RequestOTLForm, MAILCForm
 from app.models import User
@@ -27,6 +28,7 @@ mail_user = app.config["MAIL_USERNAME"]
 mail_password = app.config["MAIL_SECRET"]
 smtp_server = app.config["SMTP_SERVER"]
 TLS_PORT = app.config["TLS_PORT"]
+mail_sender_address = app.config["MAIL_ADMINS"][0]
 
 # # # # # # Mails end # # # # # #
 
@@ -41,12 +43,16 @@ def add_user(username, email, password, super_user):
         user.save_user()
 
 def send_mail(receiver, subject, text):
-    mail_text = text
-    data = 'From:' + mail_user + "\nTo:" + receiver + "\nSubject:" + subject + "\n\n" + mail_text
-    server = smtplib.SMTP(smtp_server + ":" + TLS_PORT)
+    mail_text = EmailMessage()
+    mail_text.set_content(text)
+    mail_text['Subject'] = subject
+    mail_text['From'] = mail_sender_address
+    mail_text['To'] = receiver
+    server = smtplib.SMTP(smtp_server + ":" + str(TLS_PORT))
     server.starttls()
-    server.login(mail_user, mail_password)
-    server.sendmail(mail_user, receiver, data)
+    if mail_user and mail_password:
+        server.login(mail_user, mail_password)
+    server.send_message(mail_text)
     server.quit()
 
 
@@ -103,9 +109,11 @@ def register():
                 user_dummy.save_user()
                 send_mail(user_dummy.email, "anmeldung war erfolgreich",
                           "your registration was successfull: " + my_ip + "/login")
-                return 'Congratulations, you are now a registered user!'
+                flash('Congratulations, you are now a registered user!')
+                return redirect(url_for('login'))
             return render_template('register.html', title='Register', form=form, username=username)
-    return "YOU ARE NOT ALLOWED TO CREATE A NEW USER"
+    flash("YOU ARE NOT ALLOWED TO CREATE A NEW USER")
+    return redirect(url_for('login'))
 
 
 @app.route('/change_pw', methods=['GET', 'POST'])
@@ -118,8 +126,10 @@ def change_pw():
             if user_dummy.one_time_link_date > datetime.now():
                 user_dummy.set_password(form.password.data)
                 user_dummy.save_user()
-                return 'Congratulations, you have changed your PW'
-            return "The Link has been aspired"
+                flash('Congratulations, you have changed your PW')
+                return redirect(url_for('login'))
+            flash("The Link has expired")
+            redirect(url_for('login'))
         return render_template('change_pw.html', title='Change_PW', form=form)
     else:
         if current_user.is_authenticated:
@@ -140,9 +150,8 @@ def change_pw():
                     url = my_ip + "/change_pw?otl=" + otl
                     send_mail(user_dummy.email, "Verifizierung der aenderung ihres Passwords",
                               "Click this link to change your Password: " + url)
-                    return "CHECK YOUT E-MAIL"
-                else:
-                    return "USER HAS NOT BEEN FOUND"
+                flash("CHECK YOUR E-MAIL")
+                return redirect(url_for('login'))
             return render_template('request_otl.html', title='Change_Password', form=form)
 
 
