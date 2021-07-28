@@ -1,12 +1,14 @@
 .text_bit {
-    border-bottom-style: solid;
-    border-color: red;
+  border-bottom-style: solid;
+  border-color: red;
+  z-index: 0;
 }
 
 .tooltip {
   position: relative;
   display: inline-block;
   border-bottom: solid red;
+  z-index: 0;
 }
 
 .tooltip .tooltiptext {
@@ -20,10 +22,12 @@
   /* Position the tooltip */
   position: absolute;
   z-index: 1;
+  z-index: 0;
 }
 
 .tooltip:hover .tooltiptext {
   visibility: visible;
+  z-index: 0;
 }
 
 .dropzone{
@@ -33,10 +37,12 @@
   display:inline-block;
   min-width: 5px;
   float: left;
+  z-index: 0;
 }
 
 .delete{
   float: right;
+  z-index: 0;
 }
 .category{
   float: left;
@@ -44,4 +50,63 @@
   background-color: transparent;
   border-color: red;
   width: 60px;
+  z-index: 0;
+}
+
+.text{
+  float: left;
+  width: 75%;
+  border: #333333;
+  border-style: solid;
+}
+
+.word{
+  z-index: 2;
+  border-color: transparent;
+  height: 30px;
+  float: left;
+}
+
+.bot-part{
+  float: left;
+  width: 75%;
+}
+
+.save-button{
+  float: left;
+}
+
+.new-input{
+  float: left;
+}
+
+.backup-part{
+  float:left;
+  width: 100%;
+  height: 10%;
+}
+
+.stack-top{
+  float:left;
+  top: 20%;
+  width: 15%;
+  left: 78%;
+  position: absolute;
+  z-index: 10;
+  display: none;
+}
+
+.stack-top table{
+  border-style: solid;
+  width: 100%;
+}
+
+.stack-top table tr {
+  width: 100%;
+}
+.stack-top table tr th {
+  width: 50%;
+}
+.stack-top table tr td {
+  width: 50%;
 }
