@@ -14,7 +14,6 @@ from app.forms import LoginForm, RegistrationForm, PWCForm, RequestOTLForm, MAIL
 from app.models import User
 from flask_login import current_user, login_user, logout_user, login_required
 
-
 my_ip = app.config["MY_IP"]
 backend_endpoint = app.config["BACKEND_IP"]
 port = app.config["BACKEND_PORT"]
