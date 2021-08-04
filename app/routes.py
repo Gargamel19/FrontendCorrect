@@ -67,23 +67,25 @@ def get_backup_list(name, text):
         new_backups.append([backup, str(dt)])
     return new_backups
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/login', methods=['GET'])
 def login():
     if current_user.is_authenticated:
         return redirect(url_for('ueberlieferung'))
     form = LoginForm()
-    if form.validate_on_submit():
-        user_dummy = User.query.filter_by(username=form.username.data).first()
-        if user_dummy is None or not user_dummy.check_password(form.password.data):
-            flash('Invalid username or password')
-            return redirect(url_for('login'))
-        login_user(user_dummy, remember=form.remember_me.data)
-        next_page = request.args.get('next')
-        if not next_page or url_parse(next_page).netloc != '':
-            next_page = url_for('ueberlieferung')
-        return redirect(next_page)
     return render_template('login.html', title='Sign In', form=form)
 
+@app.route('/login', methods=['POST'])
+def login_post():
+    form = LoginForm()
+    user_dummy = User.query.filter_by(username=form.username.data).first()
+    if user_dummy is None or not user_dummy.check_password(form.password.data):
+        flash('Invalid username or password')
+        return redirect(url_for('login'))
+    login_user(user_dummy, remember=form.remember_me.data)
+    next_page = request.args.get('next')
+    if not next_page or url_parse(next_page).netloc != '':
+        next_page = url_for('ueberlieferung')
+    return redirect(next_page)
 
 @app.route('/logout')
 def logout():
@@ -184,7 +186,6 @@ def change_mail():
 def ueberlieferung():
     username = get_username_from_current_user(current_user)
     response = requests.get(backend_endpoint + "/sammlungen")
-    print(backend_endpoint + "/sammlungen")
     files = json.loads(response.text)
     return render_template('index.html', title='Home', files=files, url=request.url, username=username)
 
@@ -211,13 +212,35 @@ def sammlung_text(name, text):
         for word in form["words"]:
             args = []
             for key in word[1].keys():
-                args.append([key, word[1][key]])
+                if key != "function":
+                    args.append([key, word[1][key]])
             words.append([word[0], args])
 
         return_list.append([form["function"], words])
 
     return render_template('index_ueberlieferung_text.html', title='Text', files=return_list,
                            url=request.url, len=len(return_list), backups=get_backup_list(name, text), username=username)
+
+@app.route('/sammlung/<name>/text/<text>', methods=['POST'])
+@login_required
+def sammlung_text_post(name, text):
+    erg = []
+    for key in request.form.keys():
+        if str(key).startswith("cat_"):
+            erg.append({"function": request.form.get(key), "words": []})
+        elif str(key).startswith("wordContainer_"):
+            if len(erg) == 0:
+                erg.append({"function": "nosegment", "words": []})
+            erg[len(erg) - 1]["words"].append([request.form.get(key), {}])
+        elif str(key).startswith("attValue_"):
+            if len(erg) == 0:
+                erg.append({"function": "nosegment", "words": ["", {}]})
+            newkey = request.form.get("attKey_" + str(key).replace(str(key).split("_")[0] + "_", ""))
+            if newkey != "" and not newkey.startswith("[REMOVED] "):
+                erg[len(erg) - 1]["words"][len(erg[len(erg) - 1]["words"]) - 1][1][newkey] = request.form.get(key)
+    url = backend_endpoint + "/sammlung/{}/text/{}".format(name, text)
+    requests.post(url, json=json.dumps(erg, ensure_ascii=False))
+    return redirect(url_for("sammlung_text", name=name, text=text))
 
 
 @app.route('/sammlung/<name>/text/<text>/backups', methods=['GET'])
@@ -258,23 +281,3 @@ def restore_backup(name, text, backup):
     return redirect(url_for("sammlung_text", name=name, text=text))
 
 
-@app.route('/sammlung/<name>/text/<text>', methods=['POST'])
-@login_required
-def sammlung_text_post(name, text):
-    erg = []
-    for key in request.form.keys():
-        if str(key).startswith("cat_"):
-            erg.append({"function": request.form.get(key), "words": []})
-        elif str(key).startswith("wordContainer_"):
-            if len(erg) == 0:
-                erg.append({"function": "nosegment", "words": []})
-            erg[len(erg) - 1]["words"].append([request.form.get(key), {}])
-        elif str(key).startswith("attValue_"):
-            if len(erg) == 0:
-                erg.append({"function": "nosegment", "words": ["", {}]})
-            newkey = request.form.get("attKey_" + str(key).replace(str(key).split("_")[0] + "_", ""))
-            if newkey != "" and not newkey.startswith("[REMOVED] "):
-                erg[len(erg) - 1]["words"][len(erg[len(erg) - 1]["words"]) - 1][1][newkey] = request.form.get(key)
-    url = backend_endpoint + "/sammlung/{}/text/{}".format(name, text)
-    requests.post(url, json=json.dumps(erg, ensure_ascii=False))
-    return redirect(url_for("sammlung_text", name=name, text=text))

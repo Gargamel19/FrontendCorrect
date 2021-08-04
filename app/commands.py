@@ -1,7 +1,5 @@
 import click
 from flask.cli import with_appcontext
-
-import app.config
 from app.extentions import db
 
 
@@ -9,7 +7,18 @@ from app.extentions import db
 @with_appcontext
 def create_tables():
     print("create tables")
-    print(app.config.SQLALCHEMY_DATABASE_URI)
+    from app import app
+    print(app.config["SQLALCHEMY_DATABASE_URI"])
+    db.create_all()
+
+
+@click.command(name='create_test_tables')
+@with_appcontext
+def create_test_tables():
+    print("create test tables")
+    from app import app
+    import app.config_test as config_test
+    app.config["SQLALCHEMY_DATABASE_URI"] = config_test.SQLALCHEMY_DATABASE_URI
     db.create_all()
 
 

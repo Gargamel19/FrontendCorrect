@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_login import LoginManager
 import app.config as config
-from app.commands import create_tables, add_user
+from app.commands import create_tables, add_user, create_test_tables
 
 from app.extentions import db, login_manager
 
@@ -14,6 +14,7 @@ login = LoginManager(app)
 login.login_view = 'login'
 
 app.cli.add_command(create_tables)
+app.cli.add_command(create_test_tables)
 app.cli.add_command(add_user)
 
 from app import routes, models
