@@ -6,30 +6,36 @@ import app.config_test as config_test
 from app.models import User
 from app import app, db
 
+from flask import template_rendered
 
 class UserTests(unittest.TestCase):
 
     loged_in_normal_routes = \
         [
-            ["/", 200, 302],
-            ["/sammlung/mondsee", 200, 302],
-            ["/sammlung/mondsee/text/mondsee.rath0001.lat001.xml", 200, 302],
-            ["/sammlung/mondsee/text/mondsee.rath0001.lat001.xml/backups", 200, 302],
-            ["/change_mail", 200, 302],
+            ["/", "index.html", "login.html"],
+            ["/sammlung/mondsee", "index_ueberlieferung.html", "login.html"],
+            ["/sammlung/mondsee/text/mondsee.rath0001.lat001.xml", "index_ueberlieferung_text.html", "login.html"],
+            ["/sammlung/mondsee/text/mondsee.rath0001.lat001.xml/backups", "index_backups.html", "login.html"],
+            ["/change_mail", "change_mail.html", "login.html"],
 
-            ["/logout", 302, 302],
+            ["/logout", "login.html", "login.html"],
         ]
 
     loged_in_superuser_routes = \
         [
-            ["/register", 200, 302],
+            ["/register", "register.html", "login.html"],
         ]
 
     not_loged_in_routes = \
         [
-            ["/login", 200],
-            ["/change_pw", 200],
+            ["/login", "login.html"],
+            ["/change_pw", "request_otl.html"],
         ]
+
+    def _add_template(self, app, template, context):
+        if len(self.templates) > 0:
+            self.templates = []
+        self.templates.append((template, context))
 
     def create_app(self):
         app.config.from_object(config_test)
@@ -59,18 +65,22 @@ class UserTests(unittest.TestCase):
         db.create_all()
         self.addUser()
 
+        self.templates = []
+        template_rendered.connect(self._add_template)
+
     def tearDown(self):
 
+        template_rendered.disconnect(self._add_template)
         db.session.remove()
         db.drop_all()
 
-    def expectGetStatus(self, c, url, status):
-        response = c.get(url)
-        if response.status_code == status:
+    def expectGetStatus(self, c, url, template):
+        c.get(url, follow_redirects=True)
+        if template in [x[0].name for x in self.templates]:
             print("\t" + url + " ✔️")
         else:
             print("\t" + url + " ❌")
-        self.assertEqual(response.status_code, status)
+        self.assertIn(template, [x[0].name for x in self.templates])
 
     def test_not_logged_in(self):
         with self.client as c:
