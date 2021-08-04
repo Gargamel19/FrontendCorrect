@@ -19,4 +19,4 @@ jobs:
         flask create_tables
     - name: Test with unittest
       run: |
-        python -m unittest
+        python -m unittest app/tests/test_user.py
