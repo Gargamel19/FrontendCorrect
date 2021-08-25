@@ -32,3 +32,4 @@ attrs~=20.3.0
 #psycopg2~=2.8.6 # I got error messages when trying to install this
 psycopg2-binary # They suggest using this for most systems: https://www.psycopg.org/docs/install.html
 bugsnag[flask]
+coveralls
