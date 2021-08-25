@@ -20,11 +20,15 @@ jobs:
     - name: Test with unittest
       run: |
         python -m unittest app/tests/test_user.py
+    - name: Coveralls
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
   coveralls_finish:
     needs: test
     runs-on: ubuntu-latest
     steps:
-    - name: Publish to coveralls.io
-      uses: coverallsapp/github-action@v1.1.2
+    - name: Coveralls
+      uses: coverallsapp/github-action@master
       with:
-        github-token: ${{ github.token }}
+        github-token: ${{ secrets.GITHUB_TOKEN }}
