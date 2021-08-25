@@ -1,3 +1,5 @@
+[![Coverage Status](https://coveralls.io/repos/github/Gargamel19/FrontendCorrect/badge.svg?branch=dev-ferdi)](https://coveralls.io/github/Gargamel19/FrontendCorrect?branch=dev-ferdi)
+
 # Install:
 ## Local:
 1. install Python
