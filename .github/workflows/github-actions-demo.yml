@@ -20,15 +20,9 @@ jobs:
     - name: Test with unittest
       run: |
         python -m unittest app/tests/test_user.py
-    - name: Coveralls
-      uses: coverallsapp/github-action@master
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-  coveralls_finish:
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-    - name: Coveralls
-      uses: coverallsapp/github-action@master
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Post test results
+      env: 
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        coveralls --service=github
+
