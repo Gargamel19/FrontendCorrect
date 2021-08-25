@@ -46,7 +46,6 @@ class User(UserMixin, db.Model):
         chars = string.ascii_uppercase + string.digits
         self.one_time_link_hash = ''.join(random.choice(chars) for _i in range(30))
         self.one_time_link_date = datetime.now() + timedelta(minutes=10)
-        print(db)
         db.session.commit()
         return self.one_time_link_hash
 
