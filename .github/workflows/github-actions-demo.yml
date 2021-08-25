@@ -17,12 +17,12 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt; 
         flask create_tables
-    - name: Test with unittest
+    - name: Test with unittest and Coverage
       run: |
-        python -m unittest app/tests/test_user.py
         coverage run -m unittest app/tests/test_user.py
     - name: Coveralls
-      uses: coverallsapp/github-action@master
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
+      env: 
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        coveralls --service=github
 
