@@ -18,6 +18,10 @@ class UserTests(unittest.TestCase):
             ["/sammlung/mondsee", "index_ueberlieferung.html", '["text1", "text2", "text3"]', "login.html"],
             ["/sammlung/mondsee/text/mondsee.rath0001.lat001.xml", "index_ueberlieferung_text.html", '[{"function": "test", "words": [["Ego", {"function": "test", "style": "kursiv"}], [" ", {}]]}]', "login.html"],
             ["/sammlung/mondsee/text/mondsee.rath0001.lat001.xml/backups", "index_backups.html", '["mondsee.rath0001.lat001-2021-08-04-16-23-55.062899_r_.xml", "mondsee.rath0001.lat001-2021-08-04-17-23-55.062899_r_.xml", "mondsee.rath0001.lat001-2021-08-04-18-23-55.062899_r_.xml"]', "login.html"],
+            ["/sammlung/mondsee/text/mondsee.rath0001.lat001.xml/backup/mondsee.rath0001.lat001-2021-08-04-16-23-55.062899_r_.xml", "index_backup_text.html",
+             '[]',
+             "login.html"],
+
             ["/change_mail", "change_mail.html", "", "login.html"],
 
             ["/logout", "login.html", True, "login.html"],
