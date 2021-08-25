@@ -283,4 +283,3 @@ def restore_backup(name, text, backup):
     requests.post(url)
     return redirect(url_for("sammlung_text", name=name, text=text))
 
-
