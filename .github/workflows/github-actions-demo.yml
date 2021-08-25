@@ -20,6 +20,7 @@ jobs:
     - name: Test with unittest
       run: |
         python -m unittest app/tests/test_user.py
+        coverage run -m unittest app/tests/test_user.py
     - name: Coveralls
       uses: coverallsapp/github-action@master
       with:
