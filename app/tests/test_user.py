@@ -89,7 +89,6 @@ class UserTests(unittest.TestCase):
         self.assertIn(template, [x[0].name for x in self.templates])
 
     def post_test(self, c, url, form, response_template):
-
         c.post(url, data=form, follow_redirects=True)
         if response_template in [x[0].name for x in self.templates]:
             print("\t" + url + " -> " + response_template + " ✔️")
@@ -101,6 +100,12 @@ class UserTests(unittest.TestCase):
         with self.client as c:
             print()
             print("test_login_post")
+
+            mock_get_patcher = patch('app.routes.requests.get')
+            mock_get = mock_get_patcher.start()
+
+            mock_get.return_value = Mock(text='["mondsee"]')
+
             self.post_test(c, "/login", dict(username='superuser', password="hallo"),
                            "login.html")
             self.post_test(c, "/login", dict(username='superuser', password="Pa55wort"),
@@ -124,7 +129,6 @@ class UserTests(unittest.TestCase):
 
             mock_get_patcher_smtp = patch('app.routes.smtplib.SMTP')
             mock_get_patcher_smtp.start()
-
 
             self.post_test(c, "/register", dict(username='nextuser', email="fettarmqp.cam4@gmail.com", password="Pa55wort",
                                                 password2="Pa55wort", submit=True), "index.html")
