@@ -50,6 +50,5 @@ class User(UserMixin, db.Model):
         return self.one_time_link_hash
 
     def save_user(self):
-        print(db)
         db.session.add(self)
         db.session.commit()

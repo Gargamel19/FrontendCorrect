@@ -4,7 +4,6 @@ from unittest.mock import Mock, patch
 
 import app.config_test as config_test
 
-
 from app.models import User
 from app import app, db
 
@@ -15,6 +14,7 @@ class UserTests(unittest.TestCase):
     loged_in_normal_routes = \
         [
             ["/", "index.html", '["mondsee"]', "login.html"],
+            ["/login", "index.html", '["mondsee"]', "login.html"],
             ["/sammlung/mondsee", "index_ueberlieferung.html", '["text1", "text2", "text3"]', "login.html"],
             ["/sammlung/mondsee/text/mondsee.rath0001.lat001.xml", "index_ueberlieferung_text.html", '[{"function": "test", "words": [["Ego", {"function": "test", "style": "kursiv"}], [" ", {}]]}]', "login.html"],
             ["/sammlung/mondsee/text/mondsee.rath0001.lat001.xml/backups", "index_backups.html", '["mondsee.rath0001.lat001-2021-08-04-16-23-55.062899_r_.xml", "mondsee.rath0001.lat001-2021-08-04-17-23-55.062899_r_.xml", "mondsee.rath0001.lat001-2021-08-04-18-23-55.062899_r_.xml"]', "login.html"],
@@ -83,10 +83,53 @@ class UserTests(unittest.TestCase):
     def expectGetStatus(self, c, url, template):
         c.get(url, follow_redirects=True)
         if template in [x[0].name for x in self.templates]:
-            print("\t" + url + " ✔️")
+            print("\t" + url + " -> " + template + " ✔️")
         else:
-            print("\t" + url + " ❌")
+            print("\t" + url + " -> " + template + " ❌")
         self.assertIn(template, [x[0].name for x in self.templates])
+
+    def post_test(self, c, url, form, response_template):
+
+        c.post(url, data=form, follow_redirects=True)
+        if response_template in [x[0].name for x in self.templates]:
+            print("\t" + url + " -> " + response_template + " ✔️")
+        else:
+            print("\t" + url + " -> " + response_template + " ❌")
+        self.assertIn(response_template, [x[0].name for x in self.templates])
+
+    def test_login_post(self):
+        with self.client as c:
+            print()
+            print("test_login_post")
+            self.post_test(c, "/login", dict(username='superuser', password="hallo"),
+                           "login.html")
+            self.post_test(c, "/login", dict(username='superuser', password="Pa55wort"),
+                           "index.html")
+
+    def test_register_not_logged_in_post(self):
+        with self.client as c:
+            print()
+            print("test_register_not_logged_in_post")
+            self.post_test(c, "/login", dict(username='testuser', password="Pa55wort"),
+                           "index.html")
+            self.post_test(c, "/register", dict(username='nextuser', email="123@gmail.com", password="Pa55wort",
+                                                password2="Pa55wort"), "index.html")
+
+    def test_register_logged_in_post(self):
+        with self.client as c:
+            print()
+            print("test_register_logged_in_post")
+            self.post_test(c, "/login", dict(username='superuser', password="Pa55wort"),
+                           "index.html")
+
+            mock_get_patcher_smtp = patch('app.routes.smtplib.SMTP')
+            mock_get_patcher_smtp.start()
+
+
+            self.post_test(c, "/register", dict(username='nextuser', email="fettarmqp.cam4@gmail.com", password="Pa55wort",
+                                                password2="Pa55wort", submit=True), "index.html")
+            user_dummy = User.query.filter_by(username="nextuser").first()
+            self.assertIsNotNone(user_dummy)
 
     def test_not_logged_in(self):
         with self.client as c:
@@ -97,7 +140,6 @@ class UserTests(unittest.TestCase):
 
             print()
             print("not_logged_in_restricted_pages:")
-
             for route in self.loged_in_superuser_routes:
                 self.expectGetStatus(c, route[0], route[3])
             for route in self.loged_in_normal_routes:
@@ -107,9 +149,8 @@ class UserTests(unittest.TestCase):
         with self.client as c:
             print()
             print("logged_in_normal_allowed_pages:")
-
-            c.post("/login", data=dict(username='testuser', password="Pa55wort",
-                   follow_redirects=True))
+            c.post("/login", data=dict(username='superuser', password="Pa55wort",
+                                       follow_redirects=True))
 
             mock_get_patcher = patch('app.routes.requests.get')
             mock_get = mock_get_patcher.start()
