@@ -200,6 +200,131 @@ class UserTests(unittest.TestCase):
         },
     ]
 
+    super_user_logged_in = [
+        {
+            "function": "GET",
+            "url": "/login",
+            "template": "index.html",
+            "request_mock_return_get": '["mondsee"]',
+        },
+        {
+            "function": "GET",
+            "url": "/logout",
+            "template": "login.html",
+        },
+        {
+            "function": "GET",
+            "url": "/register",
+            "template": "register.html",
+        },
+        {
+            "function": "GET",
+            "url": "/change_pw",
+            "template": "change_pw.html"
+        },
+        {
+            "function": "GET",
+            "url": "/change_pw?otl=OTL",
+            "template": "change_pw.html",
+            "otl": "testuser"
+        },
+        {
+            "function": "GET",
+            "url": "/change_mail",
+            "template": "change_mail.html"
+        },
+        {
+            "function": "GET",
+            "url": "/change_mail?otl=OTL&email=hallo@gmail.com",
+            "template": "index.html",
+            "otl": "testuser",
+            "request_mock_return_get": '["mondsee"]'
+        },
+        {
+            "function": "GET",
+            "url": "/",
+            "template": "index.html",
+            "request_mock_return_get": '["mondsee"]',
+        },
+        {
+            "function": "GET",
+            "url": "/sammlung/mondsee",
+            "template": "index_ueberlieferung.html",
+            "request_mock_return_get": '["text1", "text2", "text3"]',
+        },
+        {
+            "function": "GET",
+            "url": "/sammlung/mondsee/text/mondsee.rath0001.lat001.xml",
+            "template": "index_ueberlieferung_text.html",
+            "request_mock_return_get": '[{"function": "test", "words": [["Ego", {"function": "test", "style": "kursiv"}], [" ", {}]]}]',
+        },
+        {
+            "function": "GET",
+            "url": "/sammlung/mondsee/text/mondsee.rath0001.lat001.xml/backups",
+            "template": "index_backups.html",
+            "request_mock_return_get": '["mondsee.rath0001.lat001-2021-08-04-16-23-55.062899_r_.xml", "mondsee.rath0001.lat001-2021-08-04-17-23-55.062899_r_.xml", "mondsee.rath0001.lat001-2021-08-04-18-23-55.062899_r_.xml"]',
+        },
+        {
+            "function": "GET",
+            "url": "/sammlung/mondsee/text/mondsee.rath0001.lat001.xml/backup/mondsee.rath0001.lat001-2021-08-04-16-23-55.062899_r_.xml",
+            "template": "index_backup_text.html",
+            "request_mock_return_get": '[{"function": "test", "words": [["Ego", {"function": "test", "style": "kursiv"}], [" ", {}]]}]',
+        },
+        {
+            "function": "POST",
+            "url": "/login",
+            "form": dict(username='testuser', password="Pa55wort"),
+            "template": "index.html",
+            "request_mock_return_get": '["mondsee"]',
+        },
+        {
+            "function": "POST",
+            "url": "/register",
+            "form": dict(username='testuser1', password="Pa55wort"),
+            "template": "index.html",
+            "request_mock_return_get": '["mondsee"]',
+        },
+        {
+            "function": "POST",
+            "url": "/change_pw?otl=OTL",
+            "form": dict(password='IchBin1Giraffe', password2="IchBin1Giraffe"),
+            "template": "index.html",
+            "otl": "testuser",
+            "request_mock_return_get": '["mondsee"]',
+        },
+        {
+            "function": "POST",
+            "url": "/change_pw",
+            "form": dict(password='IchBin1Giraffe', password2="IchBin1Giraffe"),
+            "template": "index.html",
+            "request_mock_return_get": '["mondsee"]',
+        },
+        {
+            "function": "POST",
+            "url": "/change_mail",
+            "form": dict(mail1="trendelenburger19.04@googlemail.com", mail2="trendelenburger19.04@googlemail.com"),
+            "template": "index.html",
+            "request_mock_return_get": '["mondsee"]',
+        },
+        {
+            "function": "POST",
+            "url": "/sammlung/mondsee/text/mondsee.rath0001.lat001.xml",
+            "form": dict(),
+            "payload": '[{"function": "test", "words": [["Ego", {"function": "test", "style": "kursiv"}], [" ", {}]]}]',
+            "template": "index_ueberlieferung_text.html",
+            "request_mock_return_post": '[{"function": "test", "words": [["Ego", {"function": "test", "style": "kursiv"}], [" ", {}]]}]',
+            "request_mock_return_get": '[{"function": "test", "words": [["Ego", {"function": "test", "style": "kursiv"}], [" ", {}]]}]',
+        },
+        {
+            "function": "POST",
+            "url": "/sammlung/mondsee/text/mondsee.rath0001.lat001.xml/backup/mondsee.rath0001.lat001-2021-08-04-16-23-55.062899_r_.xml",
+            "form": dict(),
+            "template": "index_ueberlieferung_text.html",
+            "request_mock_return_post": 'OK',
+            "request_mock_return_get": '[{"function": "test", "words": [["Ego", {"function": "test", "style": "kursiv"}], [" ", {}]]}]',
+        },
+    ]
+
     def _add_template(self, app, template, context):
         if len(self.templates) > 0:
             self.templates = []
@@ -297,6 +422,12 @@ class UserTests(unittest.TestCase):
             print()
             print("normal_user_logged_in:")
             self.function_test(c, self.normal_user_logged_in, user='testuser', password="Pa55wort")
+
+    def test_super_user_logged_in_routes(self):
+        with self.client as c:
+            print()
+            print("super_user_logged_in:")
+            self.function_test(c, self.super_user_logged_in, user='superuser', password="Pa55wort")
 
 if __name__ == "__main__":
     unittest.main()
