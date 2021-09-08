@@ -377,7 +377,7 @@ class UserTests(unittest.TestCase):
         c.post(url, data=form, follow_redirects=True)
         self.compare_returns(response_template, url, function)
 
-    def function_test(self, c, list, user=None, password=None):
+    def function_test(self, c, list, username=None, password=None):
         mock_get_patcher_get = patch('app.routes.requests.get')
         mock_request_get = mock_get_patcher_get.start()
         mock_request_get.return_value = Mock(text="")
@@ -387,8 +387,8 @@ class UserTests(unittest.TestCase):
         mock_get_patcher_smtp = patch('app.routes.smtplib.SMTP')
         mock_get_patcher_smtp.start()
         for route in list:
-            if user and password:
-                c.post("/login", data=dict(username=user, password=password), follow_redirects=True)
+            if username and password:
+                c.post("/login", data=dict(username=username, password=password), follow_redirects=True)
             route_url = route["url"]
             if "request_mock_return_get" in route:
                 mock_request_get.return_value = Mock(text=route["request_mock_return_get"])
@@ -404,8 +404,6 @@ class UserTests(unittest.TestCase):
             if "logout" in route:
                 print("\t\tNEEDS LOGOUT")
                 c.get("/logout", follow_redirects=True)
-            if "login" in route:
-                print("\t\tNEEDS LOGIN")
 
         mock_get_patcher_get.stop()
         mock_get_patcher_post.stop()
@@ -421,13 +419,13 @@ class UserTests(unittest.TestCase):
         with self.client as c:
             print()
             print("normal_user_logged_in:")
-            self.function_test(c, self.normal_user_logged_in, user='testuser', password="Pa55wort")
+            self.function_test(c, self.normal_user_logged_in, username='testuser', password="Pa55wort")
 
     def test_super_user_logged_in_routes(self):
         with self.client as c:
             print()
             print("super_user_logged_in:")
-            self.function_test(c, self.super_user_logged_in, user='superuser', password="Pa55wort")
+            self.function_test(c, self.super_user_logged_in, username='superuser', password="Pa55wort")
 
 if __name__ == "__main__":
     unittest.main()
