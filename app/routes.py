@@ -48,12 +48,13 @@ def send_mail(receiver, subject, text):
     mail_text['Subject'] = subject
     mail_text['From'] = mail_sender_address
     mail_text['To'] = receiver
-    server = smtplib.SMTP(smtp_server + ":" + str(TLS_PORT))
-    server.starttls()
-    if mail_user and mail_password:
-        server.login(mail_user, mail_password)
-    server.send_message(mail_text)
-    server.quit()
+    if smtp_server:
+        server = smtplib.SMTP(smtp_server + ":" + str(TLS_PORT))
+        server.starttls()
+        if mail_user and mail_password:
+            server.login(mail_user, mail_password)
+        server.send_message(mail_text)
+        server.quit()
 
 
 def get_backup_list(name, text):
@@ -107,7 +108,7 @@ def register():
         logged_in_user = User.query.filter_by(id=current_user.get_id()).first()
         if logged_in_user.super_user:
             form = RegistrationForm()
-            if form.validate_on_submit():
+            if request.method == 'POST':
                 user_dummy = User(username=form.username.data, email=form.email.data, super_user=False)
                 user_dummy.set_password(form.password.data)
                 user_dummy.save_user()
