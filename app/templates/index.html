@@ -5,7 +5,11 @@
     <body>
         {% include 'topnav.html' %}
         {% for file in files %}
-        <h1><div><a href="{{ url + 'sammlung/' + file }}">{{ file }}</a></div></h1>
+            <h1>
+                <div>
+                    <a href="{{ url + 'sammlung/' + file }}">{{ file }}</a>
+                </div>
+            </h1>
         {% endfor %}
     </body>
 </html>
