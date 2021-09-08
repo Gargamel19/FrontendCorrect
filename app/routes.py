@@ -208,7 +208,6 @@ def ueberlieferung():
     username = get_username_from_current_user(current_user)
     response = requests.get(backend_endpoint + "/sammlungen")
     files = json.loads(response.text)
-    print(files)
     return render_template('index.html', title='Home', files=files, url=request.url, username=username)
 
 

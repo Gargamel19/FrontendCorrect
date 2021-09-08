@@ -5,7 +5,7 @@ from unittest.mock import Mock, patch
 import app.config_test as config_test
 
 from app.models import User
-from app import app, db
+from app import app, db, routes
 
 from flask import template_rendered
 
@@ -213,13 +213,8 @@ class UserTests(unittest.TestCase):
 
     def addUser(self):
         with app.app_context():
-            user = User("testuser", "trendelenburger19.04@googlemail.com", False)
-            user.set_password("Pa55wort")
-            db.session.add(user)
-            user = User("superuser", "trendelenburger19.041@googlemail.com", True)
-            user.set_password("Pa55wort")
-            db.session.add(user)
-            db.session.commit()
+            routes.add_user("testuser", "trendelenburger19.04@googlemail.com", "Pa55wort", False)
+            routes.add_user("superuser", "trendelenburger19.041@googlemail.com", "Pa55wort", True)
 
     # executed prior to each test
     def setUp(self):
