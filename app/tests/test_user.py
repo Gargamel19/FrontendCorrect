@@ -280,7 +280,7 @@ class UserTests(unittest.TestCase):
         {
             "function": "POST",
             "url": "/register",
-            "form": dict(username='testuser1', password="Pa55wort"),
+            "form": dict(username='testuser1', email="123@googlemail.com", password="Pa55wort", password2="Pa55wort"),
             "template": "index.html",
             "request_mock_return_get": '["mondsee"]',
         },
