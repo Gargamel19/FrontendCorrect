@@ -100,7 +100,7 @@ def get_username_from_current_user(current_user):
     return User.query.filter_by(id=current_user.get_id()).first().username
 
 
-@app.route('/register', methods=['GET', 'POST'])
+@app.route('/register', methods=['GET'])
 @login_required
 def register():
     username = get_username_from_current_user(current_user)
@@ -108,15 +108,25 @@ def register():
         logged_in_user = User.query.filter_by(id=current_user.get_id()).first()
         if logged_in_user.super_user:
             form = RegistrationForm()
-            if request.method == 'POST':
-                user_dummy = User(username=form.username.data, email=form.email.data, super_user=False)
-                user_dummy.set_password(form.password.data)
-                user_dummy.save_user()
-                send_mail(user_dummy.email, "anmeldung war erfolgreich",
-                          "your registration was successfull: " + my_ip + "/login")
-                flash('Congratulations, you are now a registered user!')
-                return redirect(url_for('login'))
             return render_template('register.html', title='Register', form=form, username=username)
+    flash("YOU ARE NOT ALLOWED TO CREATE A NEW USER")
+    return redirect(url_for('login'))
+
+
+@app.route('/register', methods=['POST'])
+@login_required
+def register_post():
+    if current_user.is_authenticated:
+        logged_in_user = User.query.filter_by(id=current_user.get_id()).first()
+        if logged_in_user.super_user:
+            form = RegistrationForm()
+            user_dummy = User(username=form.username.data, email=form.email.data, super_user=False)
+            user_dummy.set_password(form.password.data)
+            user_dummy.save_user()
+            send_mail(user_dummy.email, "anmeldung war erfolgreich",
+                      "your registration was successfull: " + my_ip + "/login")
+            flash('Congratulations, you are now a registered user!')
+            return redirect(url_for('login'))
     flash("YOU ARE NOT ALLOWED TO CREATE A NEW USER")
     return redirect(url_for('login'))
 
