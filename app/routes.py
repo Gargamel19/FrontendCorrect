@@ -157,8 +157,9 @@ def change_pw_post():
             user_dummy.save_user()
             flash('Congratulations, you have changed your PW')
             return redirect(url_for('login'))
-        flash("The Link has expired")
-        redirect(url_for('login'))
+        else:
+            flash("The Link has expired")
+            redirect(url_for('login'))
         return render_template('change_pw.html', title='Change_PW', form=form)
     else:
         if current_user.is_authenticated:
