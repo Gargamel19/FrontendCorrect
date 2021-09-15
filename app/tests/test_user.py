@@ -32,6 +32,12 @@ class UserTests(unittest.TestCase):
         {
             "function": "POST",
             "url": "/login",
+            "form": dict(username='testuser', password="Pa22wort"),
+            "template": "login.html"
+        },
+        {
+            "function": "POST",
+            "url": "/login",
             "form": dict(username='testuser', password="Pa55wort"),
             "template": "index.html",
             "request_mock_return_get": ["mondsee"],

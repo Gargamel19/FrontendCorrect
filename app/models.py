@@ -30,9 +30,6 @@ class User(UserMixin, db.Model):
         self.email = email
         self.super_user = super_user
 
-    def __repr__(self):
-        return '<User {}>'.format(self.username)
-
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
 
