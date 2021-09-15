@@ -2,6 +2,8 @@ import json
 import unittest
 from unittest.mock import Mock, patch
 
+import app.commands as custom_commands
+
 import app.config_test as config_test
 
 from app.models import User
@@ -488,6 +490,22 @@ class UserTests(unittest.TestCase):
             print("super_user_logged_in:")
             self.function_test(c, self.super_user_logged_in, username='superuser', given_password="Pa55wort")
 
+    def test_create_tables_command(self):
+        runner = app.test_cli_runner()
+        result = runner.invoke(custom_commands.create_tables, [])
+        self.assertIn("create tables", result.output)
+
+    def test_create_test_tables_command(self):
+        runner = app.test_cli_runner()
+        result = runner.invoke(custom_commands.create_test_tables, [])
+        self.assertIn("create test tables", result.output)
+
+    def test_add_user_command(self):
+        runner = app.test_cli_runner()
+        result = runner.invoke(custom_commands.add_user, "frettchen email@googlemail.com pw1234 False")
+        print(result.output)
+        user_dummy = User.query.filter_by(username="frettchen").first()
+        self.assertIsNotNone(user_dummy)
 
 if __name__ == "__main__":
     unittest.main()
