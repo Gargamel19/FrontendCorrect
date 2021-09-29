@@ -159,8 +159,7 @@ def change_pw_post():
             return redirect(url_for('login'))
         else:
             flash("The Link has expired")
-            redirect(url_for('login'))
-        return render_template('change_pw.html', title='Change_PW', form=form)
+            return redirect(url_for('login'))
     else:
         if current_user.is_authenticated:
             form = PWCForm()
@@ -187,9 +186,14 @@ def change_mail_get():
             otl = request.args["otl"]
             email = request.args["email"]
             user_dummy = User.query.filter_by(one_time_link_hash=otl).first()
-            user_dummy.set_mail(email)
-            user_dummy.save_user()
-            return redirect(url_for('login'))
+            if user_dummy.one_time_link_date > datetime.now():
+                user_dummy.set_mail(email)
+                user_dummy.save_user()
+                flash('Congratulations, you have changed your MAIL')
+                return redirect(url_for('login'))
+            else:
+                flash("The Link has expired")
+                return redirect(url_for('login'))
     if current_user.is_authenticated:
         username = get_username_from_current_user(current_user)
         form = MAILCForm()

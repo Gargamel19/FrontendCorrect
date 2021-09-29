@@ -1,6 +1,10 @@
 import json
+import re
 import unittest
+from datetime import datetime, timedelta
 from unittest.mock import Mock, patch
+
+from flask_login import current_user
 
 import app.commands as custom_commands
 
@@ -127,7 +131,18 @@ class UserTests(unittest.TestCase):
             "otl": "testuser",
             "request_mock_return_get": ["mondsee"],
             "check_mail": "1232@googlemail.com",
-            "change_mail_back": "123@googlemail.com"
+            "change_mail_back": "123@googlemail.com",
+            "flashed": "Congratulations, you have changed your MAIL"
+        },
+        {
+            "function": "GET",
+            "url": "/change_mail?otl=OTL&email=1232@googlemail.com",
+            "template": "index.html",
+            "otl": "testuser",
+            "request_mock_return_get": ["mondsee"],
+            "check_mail": "123@googlemail.com",
+            "link_expired": True,
+            "flashed": "The Link has expired"
 
         },
         {
@@ -183,7 +198,19 @@ class UserTests(unittest.TestCase):
             "otl": "testuser",
             "request_mock_return_get": ["mondsee"],
             "check_pw": "IchBin1Giraffe",
-            "change_pw_back": True
+            "change_pw_back": True,
+            "flashed": "Congratulations, you have changed your PW"
+        },
+        {
+            "function": "POST",
+            "url": "/change_pw?otl=OTL",
+            "form": dict(password='IchBin1Giraffe', password2="IchBin1Giraffe"),
+            "template": "index.html",
+            "otl": "testuser",
+            "request_mock_return_get": ["mondsee"],
+            "check_pw": "Pa55wort",
+            "link_expired": True,
+            "flashed": "The Link has expired"
         },
         {
             "function": "POST",
@@ -260,7 +287,8 @@ class UserTests(unittest.TestCase):
             "otl": "superuser",
             "request_mock_return_get": ["mondsee"],
             "check_mail": "1234562@googlemail.com",
-            "change_mail_back": "123456@googlemail.com"
+            "change_mail_back": "123456@googlemail.com",
+            "flashed": "Congratulations, you have changed your MAIL"
         },
         {
             "function": "GET",
@@ -315,7 +343,8 @@ class UserTests(unittest.TestCase):
             "otl": "superuser",
             "request_mock_return_get": ["mondsee"],
             "check_pw": "IchBin1Giraffe",
-            "change_pw_back": True
+            "change_pw_back": True,
+            "flashed": "Congratulations, you have changed your PW"
         },
         {
             "function": "POST",
@@ -397,12 +426,14 @@ class UserTests(unittest.TestCase):
         self.assertIn(template, rendered_templates)
 
     def expectGetStatus(self, c, url, template, function):
-        c.get(url, follow_redirects=True)
+        response = c.get(url, follow_redirects=True)
         self.compare_returns(template, url, function)
+        return response
 
     def expectPostStatus(self, c, url, form, response_template, function):
-        c.post(url, data=form, follow_redirects=True)
+        response = c.post(url, data=form, follow_redirects=True)
         self.compare_returns(response_template, url, function)
+        return response
 
     def function_test(self, c, list_of_routes, username=None, given_password=None):
         mock_get_patcher_get = patch('app.routes.requests.get')
@@ -425,10 +456,18 @@ class UserTests(unittest.TestCase):
             if "otl" in route:
                 user = User.query.filter_by(username=route["otl"]).first()
                 route_url = route_url.replace("OTL", user.make_one_time_link())
+                if "link_expired" in route:
+                    user.one_time_link_date = datetime.now() - timedelta(minutes=10)
             if route["function"] == "POST":
                 self.expectPostStatus(c, route_url, route["form"], route["template"], route["function"])
             elif route["function"] == "GET":
                 self.expectGetStatus(c, route_url, route["template"], route["function"])
+            if "flashed" in route:
+                with c.session_transaction() as session:
+                    flash_message = dict(session['_flashes']).get('message')
+                    print(route)
+                    print(User.query.filter_by(id=current_user.get_id()).first().username)
+                self.assertEqual(route["flashed"], flash_message)
             if username and given_password:
                 if "check_pw" in route:
                     if route["check_pw"]:
