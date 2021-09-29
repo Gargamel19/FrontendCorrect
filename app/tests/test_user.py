@@ -232,7 +232,7 @@ class UserTests(unittest.TestCase):
         {
             "function": "POST",
             "url": "/sammlung/mondsee/text/mondsee.rath0001.lat001.xml",
-            "form": dict(),
+            "form": dict(cat_0="test", wordContainer_01="Ego", attKey_1_0_0="style", attValue_1_0_0="rekursiv"),
             "payload": '[{"function": "test", "words": [["Ego", {"function": "test", "style": "kursiv"}], [" ", {}]]}]',
             "template": "index_ueberlieferung_text.html",
             "request_mock_return_post": [{"function": "test", "words": [["Ego", {"function": "test", "style": "kursiv"}], [" ", {}]]}],
