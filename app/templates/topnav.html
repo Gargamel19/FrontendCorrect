@@ -16,14 +16,14 @@
 
       {% if not username %}
             <a style="float: right" href='{{ url_for("login") }}'>Login</a>
-            <a style="float: right" href='{{ url_for("change_pw") }}'>reset-password</a>
+            <a style="float: right" href='{{ url_for("change_pw_get") }}'>reset-password</a>
         {% endif %}
 
         {% if username %}
             <a style="float: right;">{{username}}</a>
             <a style="float: right;" href='{{ url_for("logout") }}'>Logout</a>
             <a style="float: right;" href='{{ url_for("change_mail") }}'>Change-Email</a>
-            <a style="float: right;" href='{{ url_for("change_pw") }}'>Change-Password</a>
+            <a style="float: right;" href='{{ url_for("change_pw_get") }}'>Change-Password</a>
             <a style="float: right;" href='{{ url_for("register") }}'>Register</a>
        {% endif %}
     </div>
