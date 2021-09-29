@@ -272,8 +272,6 @@ def sammlung_text_post(name, text):
                 erg.append({"function": "nosegment", "words": []})
             erg[len(erg) - 1]["words"].append([request.form.get(key), {}])
         elif str(key).startswith("attValue_"):
-            if len(erg) == 0:
-                erg.append({"function": "nosegment", "words": ["", {}]})
             newkey = request.form.get("attKey_" + str(key).replace(str(key).split("_")[0] + "_", ""))
             if newkey != "" and not newkey.startswith("[REMOVED] "):
                 erg[len(erg) - 1]["words"][len(erg[len(erg) - 1]["words"]) - 1][1][newkey] = request.form.get(key)

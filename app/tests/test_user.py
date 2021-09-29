@@ -240,6 +240,17 @@ class UserTests(unittest.TestCase):
         },
         {
             "function": "POST",
+            "url": "/sammlung/mondsee/text/mondsee.rath0001.lat001.xml",
+            "form": dict(wordContainer_01="Ego", attKey_1_0_0="style", attValue_1_0_0="rekursiv"),
+            "payload": '[{"function": "test", "words": [["Ego", {"function": "test", "style": "kursiv"}], [" ", {}]]}]',
+            "template": "index_ueberlieferung_text.html",
+            "request_mock_return_post": [
+                {"function": "test", "words": [["Ego", {"function": "test", "style": "kursiv"}], [" ", {}]]}],
+            "request_mock_return_get": [
+                {"function": "test", "words": [["Ego", {"function": "test", "style": "kursiv"}], [" ", {}]]}],
+        },
+        {
+            "function": "POST",
             "url": "/sammlung/mondsee/text/mondsee.rath0001.lat001.xml/backup/mondsee.rath0001.lat001-2021-08-04-16-23-55.062899_r_.xml",
             "form": dict(),
             "template": "index_ueberlieferung_text.html",
