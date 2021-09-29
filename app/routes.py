@@ -169,8 +169,9 @@ def change_pw_post():
             return redirect(url_for('ueberlieferung'))
         else:
             form = RequestOTLForm()
-            if User.query.filter_by(username=form.username.data).first():
-                user_dummy = User.query.filter_by(username=form.username.data).first()
+            user_dummy = User.query.filter_by(username=form.username.data).first()
+            print("user", user_dummy.username)
+            if user_dummy:
                 otl = user_dummy.make_one_time_link()
                 url = my_ip + "/change_pw?otl=" + otl
                 send_mail(user_dummy.email, "Verifizierung der aenderung ihres Passwords",

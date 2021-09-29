@@ -66,7 +66,7 @@ class UserTests(unittest.TestCase):
         {
             "function": "POST",
             "url": "/change_pw",
-            "form": dict(password='IchBin1Giraffe', password2="IchBin1Giraffe"),
+            "form": dict(username='testuser', password='IchBin1Giraffe', password2="IchBin1Giraffe"),
             "template": "login.html",
         },
         {
@@ -324,7 +324,7 @@ class UserTests(unittest.TestCase):
         {
             "function": "POST",
             "url": "/login",
-            "form": dict(username='testuser', password="Pa55wort"),
+            "form": dict(username='superuser', password="Pa55wort"),
             "template": "index.html",
             "request_mock_return_get": ["mondsee"],
         },
@@ -350,7 +350,7 @@ class UserTests(unittest.TestCase):
         {
             "function": "POST",
             "url": "/change_pw",
-            "form": dict(password='IchBin1Giraffe', password2="IchBin1Giraffe"),
+            "form": dict(username='superuser', password='IchBin1Giraffe', password2="IchBin1Giraffe"),
             "template": "index.html",
             "request_mock_return_get": ["mondsee"],
             "check_pw": "IchBin1Giraffe",
