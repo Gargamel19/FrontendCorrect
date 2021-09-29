@@ -19,7 +19,7 @@ jobs:
         flask create_tables
     - name: Test with unittest and Coverage
       run: |
-        coverage run --source=app --collectCoverageFrom=!app/tests/test_user.py -m unittest app/tests/test_user.py
+        coverage run --source=app --exclude-pattern=*/test_* -m unittest app/tests/test_user.py
     - name: Coveralls
       env: 
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
