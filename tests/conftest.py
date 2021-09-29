@@ -15,7 +15,7 @@ def app():
     db.init_app(app)
 
     abs_file_path = os.path.abspath(os.path.dirname(__file__))
-    openapi_path = os.path.join(abs_file_path, "../", "openapi")
+    openapi_path = os.path.join(abs_file_path, "../app/", "openapi")
     os.environ["SPEC_PATH"] = openapi_path
 
     return app
@@ -31,6 +31,6 @@ def clean_up():
     }
 
     abs_file_path = os.path.abspath(os.path.dirname(__file__))
-    json_path = os.path.join(abs_file_path, "../", "test_api", "core", "pets.json")
+    json_path = os.path.join(abs_file_path, "../app/", "test_api", "core", "pets.json")
     with open(json_path, "w") as pet_store:
         json.dump(default_pets, pet_store, indent=4)
