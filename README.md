@@ -1,4 +1,4 @@
-[![Coverage Status](https://coveralls.io/repos/github/Gargamel19/FrontendCorrect/badge.svg?branch=dev-ferdi)](https://coveralls.io/github/Gargamel19/FrontendCorrect?branch=dev-ferdi)
+[![Coverage Status](https://coveralls.io/repos/github/Gargamel19/FrontendCorrect/badge.svg?branch=main)](https://coveralls.io/github/Gargamel19/FrontendCorrect?branch=main)
 
 # Install:
 ## Local:
@@ -47,4 +47,3 @@ automated
 you can set the backend in the .config file in the roote of the Project \
 \
 if you are running the Frontend and the Backend on the same System make shure to modify the Ports in the .config files in the section "[STARTVALUE]"
- 
