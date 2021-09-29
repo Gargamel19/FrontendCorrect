@@ -22,7 +22,7 @@ BACKEND_PORT = int(os.environ.get('BACKEND_PORT') or 5001)
 START_PORT = 0
 
 # MAIL
-SMTP_SERVER = os.environ.get('MAIL_SERVER')
+SMTP_SERVER = os.environ.get('MAIL_SERVER') or "smtp.gmail.com"
 TLS_PORT = int(os.environ.get('MAIL_PORT') or 25)
 MAIL_USE_TLS = os.environ.get('MAIL_USE_TLS') is not None
 MAIL_USERNAME = os.environ.get('MAIL_USERNAME')

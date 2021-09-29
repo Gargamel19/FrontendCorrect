@@ -48,13 +48,12 @@ def send_mail(receiver, subject, text):
     mail_text['Subject'] = subject
     mail_text['From'] = mail_sender_address
     mail_text['To'] = receiver
-    if smtp_server:
-        server = smtplib.SMTP(smtp_server + ":" + str(TLS_PORT))
-        server.starttls()
-        if mail_user and mail_password:
-            server.login(mail_user, mail_password)
-        server.send_message(mail_text)
-        server.quit()
+    server = smtplib.SMTP(smtp_server + ":" + str(TLS_PORT))
+    server.starttls()
+    if mail_user and mail_password:
+        server.login(mail_user, mail_password)
+    server.send_message(mail_text)
+    server.quit()
 
 
 def get_backup_list(name, text):
