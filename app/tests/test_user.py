@@ -61,7 +61,8 @@ class UserTests(unittest.TestCase):
             "url": "/change_pw?otl=OTL",
             "form": dict(password='IchBin1Giraffe', password2="IchBin1Giraffe"),
             "template": "login.html",
-            "otl": "testuser"},
+            "otl": "testuser"
+        },
         {
             "function": "POST",
             "url": "/change_pw",
@@ -215,7 +216,7 @@ class UserTests(unittest.TestCase):
         {
             "function": "POST",
             "url": "/change_pw",
-            "form": dict(password='IchBin1Giraffe', password2="IchBin1Giraffe"),
+            "form": dict(username="testuser", password='IchBin1Giraffe', password2="IchBin1Giraffe"),
             "template": "index.html",
             "request_mock_return_get": ["mondsee"],
             "check_pw": "IchBin1Giraffe",
@@ -465,8 +466,6 @@ class UserTests(unittest.TestCase):
             if "flashed" in route:
                 with c.session_transaction() as session:
                     flash_message = dict(session['_flashes']).get('message')
-                    print(route)
-                    print(User.query.filter_by(id=current_user.get_id()).first().username)
                 self.assertEqual(route["flashed"], flash_message)
             if username and given_password:
                 if "check_pw" in route:
