@@ -1,4 +1,4 @@
-[![Coverage Status](https://coveralls.io/repos/github/Gargamel19/FrontendCorrect/badge.svg?branch=main)](https://coveralls.io/github/Gargamel19/FrontendCorrect?branch=main)
+[![Coverage Status](https://coveralls.io/repos/github/Gargamel19/FrontendCorrect/badge.svg?branch=main)](https://coveralls.io/github/Gargamel19/FrontendCorrect?branch=dev-ferdi)
 
 # Install:
 ## Local:
