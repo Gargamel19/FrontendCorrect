@@ -249,6 +249,7 @@ class UserTests(unittest.TestCase):
             "request_mock_return_get": [
                 {"function": "test", "words": [["Ego", {"function": "test", "style": "kursiv"}], [" ", {}]]}],
         },
+
         {
             "function": "POST",
             "url": "/sammlung/mondsee/text/mondsee.rath0001.lat001.xml/backup/mondsee.rath0001.lat001-2021-08-04-16-23-55.062899_r_.xml",
