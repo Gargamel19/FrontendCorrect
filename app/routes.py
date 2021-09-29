@@ -48,13 +48,12 @@ def send_mail(receiver, subject, text):
     mail_text['Subject'] = subject
     mail_text['From'] = mail_sender_address
     mail_text['To'] = receiver
-    if smtp_server:
-        server = smtplib.SMTP(smtp_server + ":" + str(TLS_PORT))
-        server.starttls()
-        if mail_user and mail_password:
-            server.login(mail_user, mail_password)
-        server.send_message(mail_text)
-        server.quit()
+    server = smtplib.SMTP(smtp_server + ":" + str(TLS_PORT))
+    server.starttls()
+    if mail_user and mail_password:
+        server.login(mail_user, mail_password)
+    server.send_message(mail_text)
+    server.quit()
 
 
 def get_backup_list(name, text):
@@ -100,7 +99,7 @@ def get_username_from_current_user(current_user):
     return User.query.filter_by(id=current_user.get_id()).first().username
 
 
-@app.route('/register', methods=['GET', 'POST'])
+@app.route('/register', methods=['GET'])
 @login_required
 def register():
     username = get_username_from_current_user(current_user)
@@ -108,78 +107,112 @@ def register():
         logged_in_user = User.query.filter_by(id=current_user.get_id()).first()
         if logged_in_user.super_user:
             form = RegistrationForm()
-            if request.method == 'POST':
-                user_dummy = User(username=form.username.data, email=form.email.data, super_user=False)
-                user_dummy.set_password(form.password.data)
-                user_dummy.save_user()
-                send_mail(user_dummy.email, "anmeldung war erfolgreich",
-                          "your registration was successfull: " + my_ip + "/login")
-                flash('Congratulations, you are now a registered user!')
-                return redirect(url_for('login'))
             return render_template('register.html', title='Register', form=form, username=username)
     flash("YOU ARE NOT ALLOWED TO CREATE A NEW USER")
     return redirect(url_for('login'))
 
 
-@app.route('/change_pw', methods=['GET', 'POST'])
-def change_pw():
+@app.route('/register', methods=['POST'])
+@login_required
+def register_post():
+    if current_user.is_authenticated:
+        logged_in_user = User.query.filter_by(id=current_user.get_id()).first()
+        if logged_in_user.super_user:
+            form = RegistrationForm()
+            user_dummy = User(username=form.username.data, email=form.email.data, super_user=False)
+            user_dummy.set_password(form.password.data)
+            user_dummy.save_user()
+            send_mail(user_dummy.email, "anmeldung war erfolgreich",
+                      "your registration was successfull: " + my_ip + "/login")
+            flash('Congratulations, you are now a registered user!')
+            return redirect(url_for('login'))
+    flash("YOU ARE NOT ALLOWED TO CREATE A NEW USER")
+    return redirect(url_for('login'))
+
+
+@app.route('/change_pw', methods=['GET'])
+def change_pw_get():
     if "otl" in request.args:
-        otl = request.args["otl"]
-        user_dummy = User.query.filter_by(one_time_link_hash=otl).first()
         form = PWCForm()
-        if form.validate_on_submit():
-            if user_dummy.one_time_link_date > datetime.now():
-                user_dummy.set_password(form.password.data)
-                user_dummy.save_user()
-                flash('Congratulations, you have changed your PW')
-                return redirect(url_for('login'))
-            flash("The Link has expired")
-            redirect(url_for('login'))
         return render_template('change_pw.html', title='Change_PW', form=form)
     else:
         if current_user.is_authenticated:
             username = get_username_from_current_user(current_user)
             form = PWCForm()
-            if form.validate_on_submit():
-                user_dummy = User.query.filter_by(id=current_user.get_id()).first()
-                user_dummy.set_password(form.password.data)
-                user_dummy.save_user()
-                return redirect(url_for('login'))
             return render_template('change_pw.html', title='Change_PW', form=form, username=username)
         else:
             form = RequestOTLForm()
-            if form.validate_on_submit():
-                if User.query.filter_by(username=form.username.data).first():
-                    user_dummy = User.query.filter_by(username=form.username.data).first()
-                    otl = user_dummy.make_one_time_link()
-                    url = my_ip + "/change_pw?otl=" + otl
-                    send_mail(user_dummy.email, "Verifizierung der aenderung ihres Passwords",
-                              "Click this link to change your Password: " + url)
-                flash("CHECK YOUR E-MAIL")
-                return redirect(url_for('login'))
             return render_template('request_otl.html', title='Change_Password', form=form)
 
 
-@app.route('/change_mail', methods=['GET', 'POST'])
-def change_mail():
+@app.route('/change_pw', methods=['POST'])
+def change_pw_post():
+    if "otl" in request.args:
+        otl = request.args["otl"]
+        user_dummy = User.query.filter_by(one_time_link_hash=otl).first()
+        form = PWCForm()
+        if user_dummy.one_time_link_date > datetime.now():
+            user_dummy.set_password(form.password.data)
+            user_dummy.save_user()
+            flash('Congratulations, you have changed your PW')
+            return redirect(url_for('login'))
+        else:
+            flash("The Link has expired")
+            return redirect(url_for('login'))
+    else:
+        if current_user.is_authenticated:
+            form = PWCForm()
+            user_dummy = User.query.filter_by(id=current_user.get_id()).first()
+            user_dummy.set_password(form.password.data)
+            user_dummy.save_user()
+            return redirect(url_for('ueberlieferung'))
+        else:
+            form = RequestOTLForm()
+            user_dummy = User.query.filter_by(username=form.username.data).first()
+            print("user", user_dummy.username)
+            if user_dummy:
+                otl = user_dummy.make_one_time_link()
+                url = my_ip + "/change_pw?otl=" + otl
+                send_mail(user_dummy.email, "Verifizierung der aenderung ihres Passwords",
+                          "Click this link to change your Password: " + url)
+            flash("CHECK YOUR E-MAIL")
+            return redirect(url_for('ueberlieferung'))
+
+
+@app.route('/change_mail', methods=['GET'])
+def change_mail_get():
     if "otl" in request.args:
         if "email" in request.args:
             otl = request.args["otl"]
             email = request.args["email"]
             user_dummy = User.query.filter_by(one_time_link_hash=otl).first()
-            user_dummy.set_mail(email)
-            user_dummy.save_user()
-            return redirect(url_for('login'))
+            if user_dummy.one_time_link_date > datetime.now():
+                user_dummy.set_mail(email)
+                user_dummy.save_user()
+                flash('Congratulations, you have changed your MAIL')
+                return redirect(url_for('login'))
+            else:
+                flash("The Link has expired")
+                return redirect(url_for('login'))
     if current_user.is_authenticated:
         username = get_username_from_current_user(current_user)
         form = MAILCForm()
-        user_dummy = User.query.filter_by(id=current_user.get_id()).first()
-        if form.validate_on_submit():
-            otl = user_dummy.make_one_time_link()
-            url = my_ip + "/change_mail?otl=" + otl + "&email=" + form.mail1.data
-            send_mail(user_dummy.email, "Verifizierung der Änderung ihrer E-Mail-Adresse",
-                      "Click this link to change your email to: " + url)
         return render_template('change_mail.html', title='Change_MAIL', form=form, username=username)
+    else:
+        return redirect(url_for('login'))
+
+
+@app.route('/change_mail', methods=['POST'])
+def change_mail():
+    if current_user.is_authenticated:
+        form = MAILCForm()
+        user_dummy = User.query.filter_by(id=current_user.get_id()).first()
+
+        otl = user_dummy.make_one_time_link()
+        url = my_ip + "/change_mail?otl=" + otl + "&email=" + form.mail1.data
+        send_mail(user_dummy.email, "Verifizierung der Änderung ihrer E-Mail-Adresse",
+                  "Click this link to change your email to: " + url)
+        return redirect(url_for('ueberlieferung'))
     else:
         return redirect(url_for('login'))
 
@@ -225,6 +258,7 @@ def sammlung_text(name, text):
     return render_template('index_ueberlieferung_text.html', title='Text', files=return_list,
                            url=request.url, len=len(return_list), backups=get_backup_list(name, text), username=username)
 
+
 @app.route('/sammlung/<name>/text/<text>', methods=['POST'])
 @login_required
 def sammlung_text_post(name, text):
@@ -237,8 +271,6 @@ def sammlung_text_post(name, text):
                 erg.append({"function": "nosegment", "words": []})
             erg[len(erg) - 1]["words"].append([request.form.get(key), {}])
         elif str(key).startswith("attValue_"):
-            if len(erg) == 0:
-                erg.append({"function": "nosegment", "words": ["", {}]})
             newkey = request.form.get("attKey_" + str(key).replace(str(key).split("_")[0] + "_", ""))
             if newkey != "" and not newkey.startswith("[REMOVED] "):
                 erg[len(erg) - 1]["words"][len(erg[len(erg) - 1]["words"]) - 1][1][newkey] = request.form.get(key)
