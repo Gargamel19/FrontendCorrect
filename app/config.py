@@ -28,3 +28,4 @@ MAIL_USE_TLS = os.environ.get('MAIL_USE_TLS') is not None
 MAIL_USERNAME = os.environ.get('MAIL_USERNAME') or "notreply.supersicher@gmail.com"
 MAIL_SECRET = os.environ.get('MAIL_PASSWORD') or "supersicherespasswort"
 MAIL_ADMINS = os.environ.get('MAIL_ADMINS').split(';') if os.environ.get('MAIL_ADMINS') else ['no-reply@example.com']
+
