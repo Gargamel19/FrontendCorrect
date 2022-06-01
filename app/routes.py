@@ -52,6 +52,8 @@ def send_mail(receiver, subject, text):
 def get_backup_list(name, text):
     response = requests.get(backend_endpoint + "/sammlung/{}/text/{}/backups".format(name, text))
     backups = json.loads(response.text)
+    if backups == []:
+        return []
     if isinstance(backups[0], dict):
         return []
     new_backups = []
