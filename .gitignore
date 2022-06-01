@@ -5,6 +5,7 @@
 app/app.db
 app/.env
 __pycache__
+logs/
 
 # dependencies
 /node_modules
