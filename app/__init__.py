@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_login import LoginManager
+from flask_mail import Mail
 import app.config as config
 from app.commands import create_tables, add_user, create_test_tables
 import os
@@ -10,8 +11,10 @@ from app.extentions import db, login_manager
 
 app = Flask(__name__)
 app.config.from_object(config)
+mail = Mail()
 
 db.init_app(app)
+mail.init_app(app)
 
 login = LoginManager(app)
 login.login_view = 'login'
