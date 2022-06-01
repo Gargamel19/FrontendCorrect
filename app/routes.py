@@ -24,8 +24,8 @@ if port != 80:
 
 mail_user = app.config["MAIL_USERNAME"]
 mail_password = app.config["MAIL_SECRET"]
-smtp_server = app.config["SMTP_SERVER"]
-TLS_PORT = app.config["TLS_PORT"]
+smtp_server = app.config["MAIL_SERVER"]
+TLS_PORT = app.config["MAIL_PORT"]
 mail_sender_address = app.config["MAIL_ADMINS"][0]
 
 # # # # # # Mails end # # # # # #
