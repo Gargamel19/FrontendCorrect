@@ -3,6 +3,7 @@
 /venv
 .idea
 app/app.db
+app/.env
 __pycache__
 
 # dependencies
