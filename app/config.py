@@ -22,9 +22,9 @@ BACKEND_PORT = int(os.environ.get('BACKEND_PORT') or 5001)
 START_PORT = 0
 
 # MAIL
-SMTP_SERVER = os.environ.get('MAIL_SERVER') or "smtp.gmail.com"
-TLS_PORT = int(os.environ.get('MAIL_PORT') or 25)
+MAIL_SERVER = os.environ.get('MAIL_SERVER') or "smtp.gmail.com"
+MAIL_PORT = int(os.environ.get('MAIL_PORT') or 25)
 MAIL_USE_TLS = os.environ.get('MAIL_USE_TLS') is not None
-MAIL_USERNAME = os.environ.get('MAIL_USERNAME') or "notreply.supersicher@gmail.com"
-MAIL_SECRET = os.environ.get('MAIL_PASSWORD') or "supersicherespasswort"
+MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
+MAIL_SECRET = os.environ.get('MAIL_PASSWORD')
 MAIL_ADMINS = os.environ.get('MAIL_ADMINS').split(';') if os.environ.get('MAIL_ADMINS') else ['no-reply@example.com']

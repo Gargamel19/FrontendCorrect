@@ -46,7 +46,7 @@ def send_mail(receiver, subject, text):
                sender=mail_sender_address,
                recipients=[receiver],
                text_body=text,
-               html_body='')
+               html_body=text)
 
 
 def get_backup_list(name, text):
