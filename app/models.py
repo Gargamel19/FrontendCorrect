@@ -5,7 +5,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 
 from app import login
-from app import db
+from app.extentions import db
 import random
 import string
 
@@ -29,9 +29,6 @@ class User(UserMixin, db.Model):
         self.username = username
         self.email = email
         self.super_user = super_user
-
-    def __repr__(self):
-        return '<User {}>'.format(self.username)
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
