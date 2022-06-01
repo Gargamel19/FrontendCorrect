@@ -15,7 +15,6 @@ from app.models import User
 from flask_login import current_user, login_user, logout_user, login_required
 
 
-my_ip = app.config["MY_IP"]
 backend_endpoint = app.config["BACKEND_IP"]
 port = app.config["BACKEND_PORT"]
 if port != 80:
@@ -69,12 +68,14 @@ def get_backup_list(name, text):
         new_backups.append([backup, str(dt)])
     return new_backups
 
+
 @app.route('/login', methods=['GET'])
 def login():
     if current_user.is_authenticated:
         return redirect(url_for('ueberlieferung'))
     form = LoginForm()
     return render_template('login.html', title='Sign In', form=form)
+
 
 @app.route('/login', methods=['POST'])
 def login_post():
@@ -88,6 +89,7 @@ def login_post():
     if not next_page or url_parse(next_page).netloc != '':
         next_page = url_for('ueberlieferung')
     return redirect(next_page)
+
 
 @app.route('/logout')
 def logout():
@@ -123,7 +125,7 @@ def register_post():
             user_dummy.set_password(form.password.data)
             user_dummy.save_user()
             send_mail(user_dummy.email, "anmeldung war erfolgreich",
-                      "your registration was successfull: " + my_ip + "/login")
+                      "your registration was successfull: " + url_for("login", _external=True))
             flash('Congratulations, you are now a registered user!')
             return redirect(url_for('login'))
     flash("YOU ARE NOT ALLOWED TO CREATE A NEW USER")
@@ -172,7 +174,7 @@ def change_pw_post():
             print("user", user_dummy.username)
             if user_dummy:
                 otl = user_dummy.make_one_time_link()
-                url = my_ip + "/change_pw?otl=" + otl
+                url = url_for("change_pw", otl=otl, _external=True)
                 send_mail(user_dummy.email, "Verifizierung der aenderung ihres Passwords",
                           "Click this link to change your Password: " + url)
             flash("CHECK YOUR E-MAIL")
@@ -209,7 +211,7 @@ def change_mail():
         user_dummy = User.query.filter_by(id=current_user.get_id()).first()
 
         otl = user_dummy.make_one_time_link()
-        url = my_ip + "/change_mail?otl=" + otl + "&email=" + form.mail1.data
+        url = url_for("change_mail", otl=otl, email=form.mail1.data, _external=True)
         send_mail(user_dummy.email, "Verifizierung der Änderung ihrer E-Mail-Adresse",
                   "Click this link to change your email to: " + url)
         return redirect(url_for('ueberlieferung'))
