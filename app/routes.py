@@ -19,7 +19,6 @@ backend_endpoint = app.config["BACKEND_IP"]
 port = app.config["BACKEND_PORT"]
 if port != 80:
     backend_endpoint = backend_endpoint + ":" + str(port)
-print(backend_endpoint)
 
 # # # # # # MAILS # # # # # #
 
@@ -171,10 +170,9 @@ def change_pw_post():
         else:
             form = RequestOTLForm()
             user_dummy = User.query.filter_by(username=form.username.data).first()
-            print("user", user_dummy.username)
             if user_dummy:
                 otl = user_dummy.make_one_time_link()
-                url = url_for("change_pw", otl=otl, _external=True)
+                url = url_for("change_pw_post", otl=otl, _external=True)
                 send_mail(user_dummy.email, "Verifizierung der aenderung ihres Passwords",
                           "Click this link to change your Password: " + url)
             flash("CHECK YOUR E-MAIL")
